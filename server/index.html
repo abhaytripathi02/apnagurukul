@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Upload</title>
+  </head>
+  <body style="background-color: antiquewhite">
+    <h1 style="text-align: center">File Upload in Node.js Server</h1>
+    <br />
+    <!-- // method to upload, enctype = "multipart/form-data"  -->
+    <form
+      action="/api/v1/upload/imageUpload"
+      method="post"
+      enctype="multipart/form-data"
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+      "
+    >
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter a Name"
+        style="height: 20px; width: 200px; text-align: center"
+      />
+
+      <input
+        type="text"
+        name="tags"
+        placeholder="Enter a tag"
+        style="height: 20px; width: 200px; text-align: center"
+      />
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Enter a Email"
+        style="height: 20px; width: 200px; text-align: center"
+      />
+
+      <input
+        type="file"
+        name="imageFile"
+        placeholder="Pick a image/pdf File"
+        style="height: 20px; width: 200px; display: block"
+      />
+
+      <input
+        type="submit"
+        value="Upload"
+        style="
+          height: 20px;
+          width: 200px;
+          display: block;
+          border: radius 15px;
+          cursor: pointer;
+          background-color: aqua;
+        "
+      />
+    </form>
+
+    <br />
+    <br />
+
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+      "
+    >
+      <h1>Fetch API Example</h1>
+      <button type="button" onclick="apiCall()">fetch Content</button>
+      <p id="footer" style="font: 900; font-size: xx-large"></p>
+    </div>
+  </body>
+  <script>
+    const apiCall = async () => {
+      fetch("https://cat-fact.herokuapp.com/facts")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          const element = document.getElementById("footer");
+          element.innerHTML = data[0].text;
+        })
+        .catch((error) => console.log("Error : " + error));
+    };
+  </script>
+</html>
