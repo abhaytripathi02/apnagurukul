@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: antiquewhite;
+        }
+        .main{
+            display: flex;
+            flex-direction: column;
+            gap:  20px;
+            justify-content: center;
+            align-items: center;
+        }
+        .h{
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .btn1{
+            padding: 10px;
+            cursor: pointer;
+        }
+        .btn2{
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1 id="count">0</h1>
+        <button id="increment" class="btn1">Increment</button>
+        
+        <!-- <h1 class="h">Counter</h1> -->
+        <!-- <button class="btn1" id="btn" style="background-color: cadetblue;" onclick=addValue()>Add Value</button> -->
+        <!-- <button class="btn2" id="btn" style="background-color: brown; color:aliceblue" onclick="addValue()">Remove Value</button> -->
+
+    </div>
+
+    <script>
+
+
+        const incrementButton = document.getElementById("increment");
+        const countElement = document.getElementById("count");
+
+        incrementButton.addEventListener("click", function(){
+        let count = parseInt(countElement.textContent);
+        count++;
+        countElement.textContent = count;
+        })
+
+
+    
+
+    </script>
+    
+    
+</body>
+
+<!-- 
+
+const valueDisplay = document.querySelector(".h");
+
+let counter = 12;
+
+function  addValue() {
+       counter++;
+       valueDisplay.textContent = `The current value is ${counter}`;
+};
+
+function updateCount() {
+ valueDisplay.textContent = `Counter Value: ${counter}`;
+}
+
+window.onload = updateCount(); 
+
+// Here, increment and decrement are two function so,function is called
+incrementButton.addEventListener("click", increment);
+decrementButton.addEventListener("click", decrement);
+    
+    -->
+
+
+</html>

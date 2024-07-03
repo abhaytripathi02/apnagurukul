@@ -18,7 +18,7 @@ import Lottie from 'lottie-react'
 
 export const HomePage = () => {
   return (
-    <div>
+    <div className='mt-[50px]'>
         {/* Section-1  */}
         <section className='relative mx-auto flex flex-col w-11/12 items-center
           text-white justify-between'>
@@ -167,7 +167,7 @@ export const HomePage = () => {
                       </div>
 
                       <div className='flex flex-col items-start gap-6 w-[40%] '>
-                        <div className='font-semibold text-[13px]'>
+                        <div className='font-semibold text-[15px]'>
                             The modern ApnaGurukul is the dictates its own terms. Today to be competitive specialist requires more than professional skills.
                         </div>
                         <div>
