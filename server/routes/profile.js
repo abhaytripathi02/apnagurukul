@@ -23,7 +23,7 @@ router.put("/updateProfile", auth, updateProfile);
 router.get("/getUserDetails", auth, getAllUserDetails);
 
 // Get Enrolled Courses
-router.get("/getEnrolledCourses", auth, getEnrolledCourses);
+router.get("/getEnrolledCourses", auth, getEnrolledCourses); 
 //update profile picture
 router.put("/updateDisplayPicture", auth, updateDisplayPicture);
 

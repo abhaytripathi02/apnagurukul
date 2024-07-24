@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpires:{
      type: Date,
   },
+  
   additionalDetails: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Profile"

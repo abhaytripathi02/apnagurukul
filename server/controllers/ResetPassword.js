@@ -29,7 +29,7 @@ exports.resetPasswordToken = async (req, res) => {
       { email: email },
       {
         token: token,
-        resetPasswordExpires: Date.now() + 5 * 60 * 1000 //10 min
+        resetPasswordExpires: Date.now() + 5 * 60 * 1000 //5 min
       },
       { new: true } // For to return updated document
     );
@@ -59,7 +59,6 @@ exports.resetPasswordToken = async (req, res) => {
     });
   }
 };
-
 
 
 

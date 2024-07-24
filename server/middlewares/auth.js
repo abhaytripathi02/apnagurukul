@@ -21,6 +21,7 @@ exports.auth = async (req, res, next) => {
     // Verify the token - using secret key
     // Extract info from token(decode)
     try {
+      console.log("Checking token");
       const decode = jwt.verify(token, process.env.JWT_SECRET);
       console.log("Decoded Token :", decode);
 
@@ -40,7 +41,8 @@ exports.auth = async (req, res, next) => {
     console.log("Error in auth middleware: ", err);
     return res.status(401).json({
       success: false,
-      error: "Auth failed, Something is wrong"
+      message: "Something wrong while validating the token in auth middleware",
+      error: err
     });
   }
 };

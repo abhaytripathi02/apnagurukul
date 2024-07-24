@@ -34,7 +34,8 @@ exports.createCategory = async (req, res) => {
   }
 };
 
-// getAll Categorys handler Function
+
+// getAll Categorys 
 exports.showAllCategories = async (req, res, next) => {
   try {
     const AllCategorys = await Category.find({}, { name: true, description: true });
@@ -52,6 +53,7 @@ exports.showAllCategories = async (req, res, next) => {
       Categorys: AllCategorys,
       message: `All Categorys found successfully`
     });
+
   } catch (error) {
     console.log("Error Occurs while getting all Categorys : ", error);
     return res.status(500).json({
@@ -60,6 +62,7 @@ exports.showAllCategories = async (req, res, next) => {
     });
   }
 };
+
 
 //categoryPageDetails
 exports.CategoryPageDetails = async (req, res) => {

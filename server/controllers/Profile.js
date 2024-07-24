@@ -7,7 +7,7 @@ const {imageUploadToCloudinary} = require("../utils/imageUploader");
 
 const mongoose = require("mongoose")
 
-//Create Profile Controller
+//Create Profile 
 exports.createProfile = async (req, res) => {
   try {
     const { userId, phoneNumber, gender, dateOfBirth, about } = req.body;
@@ -44,12 +44,13 @@ exports.createProfile = async (req, res) => {
   }
 };
 
-//Update Profile Controller
+//Update Profile 
 exports.updateProfile = async (req, res) => {
   try {
     //about = " ": the about variable is assigned the value of req.body.about if it exists, and if it doesn't,
     // it is assigned the default value of an empty string (" ").
-    const { phoneNumber, gender, dateOfBirth, about = " " } = req.body;
+    console.log("Request Body in Profile Controller: ",req.body)
+    const { firstName, lastName, phoneNumber, gender, dateOfBirth, about = " " } = req.body;
     // console.log("Gender: ",gender, " Dateof birth: ",dateOfBirth, " About: ",about);
     if (!gender || !dateOfBirth || !about ||!phoneNumber) {
       return res.status(404).json({
@@ -60,6 +61,7 @@ exports.updateProfile = async (req, res) => {
 
     //get userId
     const userId = req.user.id; //->> if user loggedIn then find Id from JWT token >> see auth.js file in middelware
+
     //validation
     if (!userId) {
       return res.json({
@@ -91,12 +93,25 @@ exports.updateProfile = async (req, res) => {
       },
       { new: true }
     );
+  
+    let updatedUserDetails = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          firstName: firstName,
+          lastName: lastName
+        }
+      },
+      { new: true }
+    ).populate('additionalDetails');
+
 
     //send response
     return res.status(201).json({
       success: true,
       message:"Profile Updated successfully",
-      data: updatedProfile
+      data: updatedProfile,
+      updatedUserDetails: updatedUserDetails
     });
   } catch (err) {
     console.log("Error in updateProfile : ", err);
@@ -219,6 +234,7 @@ exports.updateDisplayPicture = async (req, res) => {
   }
 }
 
+//Get Enrolled Courses by Students
 exports.getEnrolledCourses = async (req, res) => {
   try {
     const userId = req.user.id
@@ -235,26 +251,30 @@ exports.getEnrolledCourses = async (req, res) => {
         },
       })
       .exec()
-    userDetails = userDetails.toObject()
-    var SubsectionLength = 0
+    userDetails = userDetails.toObject();
+
+    var SubsectionLength = 0;
+
     for (var i = 0; i < userDetails.courses.length; i++) {
-      let totalDurationInSeconds = 0
-      SubsectionLength = 0
+
+      let totalDurationInSeconds = 0;
+
+      SubsectionLength = 0;
+
       for (var j = 0; j < userDetails.courses[i].courseContent.length; j++) {
-        totalDurationInSeconds += userDetails.courses[i].courseContent[
-          j
-        ].subSection.reduce((acc, curr) => acc + parseInt(curr.timeDuration), 0)
+        totalDurationInSeconds += userDetails.courses[i].courseContent[j].subSection.reduce((acc, curr) => acc + parseInt(curr.timeDuration), 0);
         userDetails.courses[i].totalDuration = convertSecondsToDuration(
           totalDurationInSeconds
         )
-        SubsectionLength +=
-          userDetails.courses[i].courseContent[j].subSection.length
+        SubsectionLength += userDetails.courses[i].courseContent[j].subSection.length
       }
+
       let courseProgressCount = await CourseProgress.findOne({
         courseID: userDetails.courses[i]._id,
         userId: userId,
-      })
-      courseProgressCount = courseProgressCount?.completedVideos.length
+      });
+
+      courseProgressCount = courseProgressCount?.completedVideos.length;
       if (SubsectionLength === 0) {
         userDetails.courses[i].progressPercentage = 100
       } else {

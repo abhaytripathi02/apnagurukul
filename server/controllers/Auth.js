@@ -10,6 +10,8 @@ require("dotenv").config();
 
 //<-----sendOTP Handler---->
 exports.sendOTP = async (req, res) => {
+  console.log("Error identifed in SEND OTP Controller")
+
   try {
     // const email = req.body.email;
     const { email } = req.body;
@@ -35,6 +37,9 @@ exports.sendOTP = async (req, res) => {
     //check unique otp exist or not in db   ->> Problem
     let result = OTP.findOne({ otp: otpValue });
     console.log("Bug");
+
+
+    // Logic sahi kar yaha per
     while (result) {
       let otpValue = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
@@ -58,7 +63,7 @@ exports.sendOTP = async (req, res) => {
       email: email,
       otp: otpValue
     });
-    // optBody.save();  // not reuired as we have used await before creating a record
+    // optBody.save();  // not required as we have used await before creating a record
     // console.log("OTP BODY: ", optBody);
 
     // return response with status code and message
@@ -69,6 +74,7 @@ exports.sendOTP = async (req, res) => {
 
     // Send mail with generated OTP --|or|-- use pre hook of mongoose with 'save method
   } catch (error) {
+
     console.log("Error in sendOtp: ", error);
     return res.status(500).json({
       success: false,
@@ -201,9 +207,13 @@ exports.userLogin = async (req, res) => {
       });
     }
 
+    console.log("existUser value-Login Handler line number-216: ");
+
     //check user exist or not
-    let existUser = await User.findOne({ email: email });
+    let existUser = await User.findOne({ email: email }).populate("additionalDetails").exec();
+
     console.log("existUser value-Login Handler line number-216: ", existUser);
+
     if (!existUser) {
       return res.status(404).json({
         success: false,
@@ -211,7 +221,7 @@ exports.userLogin = async (req, res) => {
       });
     }
 
-    //Match Password
+    //Match Password   -- Important 
     const isMatch = await bcrypt.compare(password, existUser.password);
     if (!isMatch) {
       return res.status(401).json({
@@ -226,6 +236,8 @@ exports.userLogin = async (req, res) => {
       id: existUser._id,
       accountType: existUser.accountType
     };
+
+    // Token expires due to this line of code expiresIn:'2hr'
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "2h"
     });
@@ -246,7 +258,7 @@ exports.userLogin = async (req, res) => {
       sucess: true,
       token: token,
       user: existUser,
-      message: "Logged In successfully!"
+      message: "Logged In successfully"
     });
   } catch (err) {
     console.log("Error in Login handler : ", err);
@@ -257,15 +269,17 @@ exports.userLogin = async (req, res) => {
   }
 };
 
-// TODO: HOMEWORK
+
 //<-----ChangePassword---->
 exports.changePassword = async (req, res) => {
   try {
     //feteh data from request body --> oldPassword, newPassword, confirmNewPassword are required fields
-    const { email, oldPassword, newPassword, confirmPassword } = req.body;
+    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+    
+    const email = req.user.email;
 
     //Validation
-    if (!oldPassword || !newPassword || !confirmPassword) {
+    if (!oldPassword || !newPassword || !confirmNewPassword) {
       return res.status(400).json({
         success: false,
         message: "Please! try again, fill all the field carefully"
@@ -282,21 +296,23 @@ exports.changePassword = async (req, res) => {
     }
 
     console.log("User at passwordChange-1:  ", user);
-    console.log("User PAssword: ", user.password);
+    console.log("User Password: ", user.password);
+
     //Checking Old password is correct or not
     var checkOldpass = await bcrypt.compare(oldPassword, user.password);
+
     if (!checkOldpass) {
       return res.status(401).json({
         success: false,
-        message: "Wrong current password!"
+        message: "Your Current Password is wrong !"
       });
     }
 
     //Checking New and Confirm Password are same or not
-    if (newPassword !== confirmPassword) {
+    if (newPassword !== confirmNewPassword) {
       return res.status(400).json({
         success: false,
-        message: "The password does not match."
+        message: "The New password does not match."
       });
     }
 
@@ -304,13 +320,15 @@ exports.changePassword = async (req, res) => {
     latestPassword = await bcrypt.hash(newPassword, 10);
 
     //Updating the new password to database
-    user = await User.updateOne(
+    //Difference between - findOneAndUpdate(): it will return the user object and updateOne(): It will not return the user object
+    user = await User.findOneAndUpdate(
       { _id: user._id },
-      { password: latestPassword }
+      { password: latestPassword },
+      {new:true}
     );
 
     //send Email to user --> password changed successfully
-    console.log("User at passwordChange-2: ", user);
+    console.log("User is console log at Auth.js in line-329:", user);
     try {
       await mailSender(
         email,
@@ -319,7 +337,7 @@ exports.changePassword = async (req, res) => {
       );
     } catch (err) {
       console.log("Error while sending Email ");
-    }
+    } 
 
     //return response
     return res.status(200).json({

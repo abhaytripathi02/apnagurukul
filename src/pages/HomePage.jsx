@@ -9,7 +9,7 @@ import CodeBlocks from '../components/core/HomePage/CodeBlocks'
 import LearningLanguageSection from '../components/core/HomePage/LearningLanguageSection'
 import TimelineSection from '../components/core/HomePage/TimelineSection'
 
-import Footer from '../components/core/common/Footer'
+import Footer from '../components/common/Footer'
 import InstructorSection from '../components/core/HomePage/InstructorSection'
 import ExploreMore from '../components/core/HomePage/ExploreMore'
 
@@ -17,14 +17,16 @@ import Education from './Education.json' // lottie-file downloaded json file
 import Lottie from 'lottie-react'
 
 export const HomePage = () => {
+
+  
   return (
-    <div className='mt-[50px]'>
+    <div>
         {/* Section-1  */}
         <section className='relative mx-auto flex flex-col w-11/12 items-center
-          text-white justify-between'>
+          text-white justify-between mt-10 '>
 
           <Link to={"/signup"}>
-               <div className='group mt-16 p-1 mx-auto rounded-full bg-richblack-800 font-bold text-richblack-200 transition-all duration-200 hover:scale-90'>
+               <div className='group mt-16 p-1 mx-auto h-10 rounded-full bg-richblack-800 font-bold text-richblack-200 transition-all duration-200 hover:scale-90'>
                 <div className='flex flex-row items-center gap-2 rounded-full px-5 py-1 transition-all duration-200 hover:scale-90 group-hover:bg-richblack-900'>
                   <p>Become an Instructor</p>
                   <FaArrowRight/>
@@ -58,7 +60,7 @@ export const HomePage = () => {
             </div>
     
             {/* Video section  */}
-            <div className='shadow-blue-200 w-[40%] my-12 mx-3'>
+            <div className='w-[40%] my-12 mx-3 shadow-md shadow-blue-200 '>
                 <video muted autoPlay loop>
                   <source src={Banner} type="video/mp4"/>
                   </video>

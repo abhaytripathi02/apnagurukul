@@ -14,7 +14,7 @@ exports.createCourse = async (req, res) => {
       courseDescription,
       whatYouWillLearn,
       price,
-      categoryId,
+      category,
       tags
     } = req.body;
 
@@ -27,7 +27,7 @@ exports.createCourse = async (req, res) => {
       !courseDescription ||
       !whatYouWillLearn ||
       !price ||
-      !categoryId ||
+      !category ||
       !tags
     ) {
       return res.status(401).json({
@@ -51,7 +51,7 @@ exports.createCourse = async (req, res) => {
     }
 
     //check given category is valid or not
-    const categoryDetails = await Category.findById(categoryId);
+    const categoryDetails = await Category.findById(category);
     if (!categoryDetails) {
       return res.status(404).json({
         success: false,
@@ -60,10 +60,7 @@ exports.createCourse = async (req, res) => {
     }
 
     //Upload Image in Cloudinary
-    const thumbnailImage = await imageUploader.imageUploadToCloudinary(
-      thumbnail,
-      process.env.FOLDER_NAME
-    );
+    const thumbnailImage = await imageUploader.imageUploadToCloudinary(thumbnail,process.env.FOLDER_NAME);
     if (!thumbnailImage) {
       return res.json({
         success: false,
@@ -78,7 +75,7 @@ exports.createCourse = async (req, res) => {
       whatYouWillLearn,
       price,
       instructor: instructorDetails._id,
-      categorys: categoryDetails._id,
+      category: categoryDetails._id,
       thumbnail: thumbnailImage.secure_url,
       tags: tags
     });
