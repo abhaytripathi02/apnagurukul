@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "*",
+    origin: "https://apnagurukul-ui.vercel.app/",
     credentials: true,
   })
 );
