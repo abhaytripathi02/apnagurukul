@@ -64,6 +64,9 @@ const CourseSchema = new mongoose.Schema({
     type: Date,
     default: Date.now 
   },
+  courseRequirements: [{
+    type: String
+  }]
 
 });
 

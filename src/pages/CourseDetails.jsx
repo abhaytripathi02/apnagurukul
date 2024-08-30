@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react"
 import { BiInfoCircle } from "react-icons/bi"
 import { HiOutlineGlobeAlt } from "react-icons/hi"
-import { ReactMarkdown } from "react-markdown/lib/react-markdown"
+import ReactMarkdown from 'react-markdown';
+
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 
 import ConfirmationModal from "../components/common/ConfirmationModal"
 import Footer from "../components/common/Footer"
-import RatingStars from "../components/Common/RatingStars"
+import RatingStars from "../components/common/RatingStars"
 import CourseAccordionBar from "../components/core/Course/CourseAccordionBar"
 import CourseDetailsCard from "../components/core/Course/CourseDetailsCard"
 import { formatDate } from "../services/formatDate"
 import { fetchCourseDetails } from "../services/operations/courseDetailsAPI"
 import { BuyCourse } from "../services/operations/studentFeaturesAPI"
-import GetAvgRating from "../utils/avgRating"
+// import GetAvgRating from "../utils/avgRating"
 import Error from "./Error"
 
 function CourseDetails() {
@@ -30,14 +31,16 @@ function CourseDetails() {
 
   // Declear a state to save the course details
   const [response, setResponse] = useState(null)
-  const [confirmationModal, setConfirmationModal] = useState(null)
+  const [confirmationModal, setConfirmationModal] = useState(null);
+
   useEffect(() => {
     // Calling fetchCourseDetails fucntion to fetch the details
     ;(async () => {
       try {
+        console.log("CourseID: ", courseId)
         const res = await fetchCourseDetails(courseId)
-        // console.log("course details res: ", res)
-        setResponse(res)
+        console.log("course details res: ", res)
+        setResponse(res);
       } catch (error) {
         console.log("Could not fetch Course Details")
       }
@@ -48,10 +51,10 @@ function CourseDetails() {
 
   // Calculating Avg Review count
   const [avgReviewCount, setAvgReviewCount] = useState(0)
-  useEffect(() => {
-    const count = GetAvgRating(response?.data?.courseDetails.ratingAndReviews)
-    setAvgReviewCount(count)
-  }, [response])
+  // useEffect(() => {
+  //   const count = GetAvgRating(response?.data?.courseDetails.ratingAndReviews)
+  //   setAvgReviewCount(count)
+  // }, [response])
   // console.log("avgReviewCount: ", avgReviewCount)
 
   // // Collapse all
@@ -70,6 +73,7 @@ function CourseDetails() {
   const [totalNoOfLectures, setTotalNoOfLectures] = useState(0)
   useEffect(() => {
     let lectures = 0
+    console.log("courseDetails Page: ", response)
     response?.data?.courseDetails?.courseContent?.forEach((sec) => {
       lectures += sec.subSection.length || 0
     })
@@ -88,18 +92,20 @@ function CourseDetails() {
   }
 
   const {
-    _id: course_id,
+    _id,
     courseName,
     courseDescription,
     thumbnail,
     price,
     whatYouWillLearn,
     courseContent,
-    ratingAndReviews,
+    RatingAndReviews,
     instructor,
-    studentsEnroled,
+    studentsEnrolled,
     createdAt,
-  } = response.data?.courseDetails
+  } = response.data;
+
+  console.log("CourseDetail:-> ",response.data);
 
   const handleBuyCourse = () => {
     if (token) {
@@ -152,8 +158,8 @@ function CourseDetails() {
               <div className="text-md flex flex-wrap items-center gap-2">
                 <span className="text-yellow-25">{avgReviewCount}</span>
                 <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
-                <span>{`(${ratingAndReviews.length} reviews)`}</span>
-                <span>{`${studentsEnroled.length} students enrolled`}</span>
+                {/* <span>{`(${ratingAndReviews.length} reviews)`}</span> */}
+                {/* <span>{`${studentsEnroled.length} students enrolled`}</span> */}
               </div>
               <div>
                 <p className="">
@@ -184,7 +190,7 @@ function CourseDetails() {
           {/* Courses Card */}
           <div className="right-[1rem] top-[60px] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:translate-y-0 lg:absolute  lg:block">
             <CourseDetailsCard
-              course={response?.data?.courseDetails}
+              course={response?.data}
               setConfirmationModal={setConfirmationModal}
               handleBuyCourse={handleBuyCourse}
             />

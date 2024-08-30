@@ -4,11 +4,13 @@ import { toast } from "react-hot-toast"
 import { HiOutlineCurrencyRupee } from "react-icons/hi"
 import { MdClose, MdNavigateNext } from "react-icons/md"
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
 import {
   addCourseDetails,
   editCourseDetails,
   fetchCourseCategories,
+  deleteCreateCourse
 } from "../../../../../services/operations/courseDetailsAPI"
 import { setCourse, setStep } from "../../../../../slices/courseSlice"
 import { COURSE_STATUS } from "../../../../../utils/constants"
@@ -26,24 +28,27 @@ export default function CourseInformationForm() {
     setValue,
     getValues,
     formState: { errors },
+    reset
   } = useForm()
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
-  const { course, editCourse } = useSelector((state) => state.course)  // course state ke andar course ka data kaha se aaya ??
+  const { editCourse } = useSelector((state) => state.course)  // course state ke andar course ka data kaha se aaya ??
+
+  const course = useSelector((state) => state.course.course);
+  console.log("Currently set Course Data:", course);
+
   const [loading, setLoading] = useState(false)
   const [courseCategories, setCourseCategories] = useState([]);
 
  
 
   useEffect(() => {
-    dispatch(setStep(1));  // remove this line when Add course section is over
-
+   
     const getCategories = async () => {
       setLoading(true)
       const response = await fetchCourseCategories();
-
-      // console.log("Response in CourseInfo: ", response);
 
       if (response.length > 0) {
         // console.log("categories", categories)
@@ -57,13 +62,15 @@ export default function CourseInformationForm() {
       setValue("courseTitle", course.courseName)
       setValue("courseShortDesc", course.courseDescription)
       setValue("coursePrice", course.price)
-      setValue("courseTags", course.tag)
+      setValue("courseTags", course.tags)
       setValue("courseBenefits", course.whatYouWillLearn)
       setValue("courseCategory", course.category)
-      setValue("courseRequirements", course.instructions)
+      setValue("courseRequirements", course.courseRequirements) 
       setValue("courseImage", course.thumbnail)
     }
     getCategories();
+
+    // dispatch(setStep(2)); ///<-------------------
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -75,10 +82,10 @@ export default function CourseInformationForm() {
       currentValues.courseTitle !== course.courseName ||
       currentValues.courseShortDesc !== course.courseDescription ||
       currentValues.coursePrice !== course.price ||
-      currentValues.courseTags.toString() !== course.tag.toString() ||
+      currentValues.courseTags.toString() !== course.tags.toString() ||
       currentValues.courseBenefits !== course.whatYouWillLearn ||
       currentValues.courseCategory._id !== course.category._id ||
-      currentValues.courseRequirements.toString() !== course.instructions.toString() ||
+      currentValues.courseRequirements.toString() !== course.courseRequirements.toString() ||
       currentValues.courseImage !== course.thumbnail
     ) {
       return true
@@ -89,7 +96,7 @@ export default function CourseInformationForm() {
 
   //  handle next button click
   const onSubmit = async (data) => {
-    console.log("Add Course Data of Step-1: ", data)
+    // console.log("Add Course Data of Step-1: ", data)
 
     // if course in edit state
     if (editCourse) {
@@ -119,8 +126,8 @@ export default function CourseInformationForm() {
           formData.append("category", data.courseCategory)
         }
         if (
-          currentValues.courseRequirements.toString() !==course.instructions.toString()){
-           formData.append("instructions",JSON.stringify(data.courseRequirements))
+          currentValues.courseRequirements.toString() !==course.courseRequirements.toString()){
+           formData.append("requirements",JSON.stringify(data.courseRequirements))
         }
         if (currentValues.courseImage !== course.thumbnail) {
           formData.append("thumbnail", data.courseImage)
@@ -147,27 +154,29 @@ export default function CourseInformationForm() {
     formData.append("courseName", data.courseTitle)
     formData.append("courseDescription", data.courseShortDesc)
     formData.append("price", data.coursePrice)
-    formData.append("tags", JSON.stringify(data.courseTags))
+    formData.append("tags",data.courseTags)
     formData.append("whatYouWillLearn", data.courseBenefits)
     formData.append("category", data.courseCategory)
     // formData.append("status", COURSE_STATUS.DRAFT)
-    // formData.append("instructions", JSON.stringify(data.courseRequirements))
+    formData.append("requirements", data.courseRequirements)
     formData.append("thumbnail_Img", data.courseImage)
 
     try {
-      console.log("Form data line NO-154:", formData);
+      // console.log("Form data line NO-154:", formData);
       
       const formDataObj = Object.fromEntries(formData.entries());
       console.log("formData Object: ",formDataObj);
 
-      //API Network call
       setLoading(true);
       const result = await addCourseDetails(formData, token);
       setLoading(false);
+
       console.log("Result of Add Course line No-159:", result);
+      
       if (result) {
-        dispatch(setStep(2))
-        dispatch(setCourse(result))
+        dispatch(setStep(2));
+        dispatch(setCourse(result));
+        console.log("After setCourse dispatched: ", encodeURIComponent(course));
       }
 
     } catch (error) {
@@ -175,8 +184,13 @@ export default function CourseInformationForm() {
       console.log("Error:", error);
     }
   }
+  
 
-
+  useEffect(() => {
+    if (course) {
+      console.log("using useEffect to handle state: ", course);
+    }
+  }, [course]);
 
   //for custom tag input logic:
   const [customTag, setCustomTag] = useState([]);
@@ -196,7 +210,7 @@ export default function CourseInformationForm() {
 
   // Delete Logic
   const handleDeleteChip = (index) => {
-    console.log("index:", index);
+    // console.log("index:", index);
       if (customTag.length === 0) {
         return null; // Return null if the array is empty
       }
@@ -205,10 +219,6 @@ export default function CourseInformationForm() {
      setCustomTag([...customTag]);
   }
 
-  useEffect(()=>{
-       setValue("courseTags", customTag);
-       //issue !!
-  },[customTag]);
 
   return (
     <form
@@ -270,7 +280,7 @@ export default function CourseInformationForm() {
                 value: /^(0|[1-9]\d*)(\.\d+)?$/,
               },
             })}
-            className="form-style w-full !pl-12 rounded-sm bg-richblack-600"
+            className="form-style w-full !pl-12 rounded-sm"
           />
           <HiOutlineCurrencyRupee className="absolute left-3 top-1/2 inline-block -translate-y-1/2 text-2xl text-richblack-400" />
         </div>
@@ -291,7 +301,7 @@ export default function CourseInformationForm() {
           {...register("courseCategory", { required: true })}
           defaultValue=""
           id="courseCategory"
-          className="form-style w-full rounded-sm pl-1 bg-richblack-600 text-white"
+          className="form-style w-full rounded-sm pl-1"
         >
           <option value="" disabled >
             Choose a Category
@@ -385,7 +395,7 @@ export default function CourseInformationForm() {
       {/* Requirements/Instructions */}
       <RequirementsField
         name="courseRequirements"
-        label="Requirements/Instructions"
+        label="Requirements"
         register={register}
         setValue={setValue}
         errors={errors}
@@ -395,7 +405,31 @@ export default function CourseInformationForm() {
 
       {/* Next Button */}
       <div className="flex justify-end gap-x-2">
+
+      {
+        !editCourse ? (
+            <button type="button"
+              className="border rounded-md bg-white p-2"
+              onClick={()=>{reset()}}>
+                Reset
+            </button>
+        ):(<></>)
+      }
+     
+      
+        {
+          editCourse && (
+            <button
+              type="button"
+              className=" border rounded-md bg-pink-200 p-2"
+              onClick={()=>{ dispatch(deleteCreateCourse({courseId:course._id}, navigate))}} >
+              Delete 
+            </button>
+          )
+        }
+
         {editCourse && (
+          
           <button
             onClick={() => dispatch(setStep(2))}
             disabled={loading}
@@ -404,6 +438,7 @@ export default function CourseInformationForm() {
             Continue Wihout Saving
           </button>
         )}
+
         <IconBtn
           disabled={loading}
           // onClick={() => dispatch(setStep(2))}
@@ -411,6 +446,7 @@ export default function CourseInformationForm() {
         >
           <MdNavigateNext />
         </IconBtn>
+
       </div>
 
 

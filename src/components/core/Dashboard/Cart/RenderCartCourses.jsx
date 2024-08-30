@@ -7,7 +7,7 @@ import { removeFromCart } from "../../../../slices/cartSlice"
 
 export default function RenderCartCourses() {
   const { cart } = useSelector((state) => state.cart)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   return (
     <div className="flex flex-1 flex-col">
       {cart.map((course, indx) => (

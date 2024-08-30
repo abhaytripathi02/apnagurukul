@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
   step: 1,
-  course: null,
+  course: localStorage.getItem('course') ? JSON.parse(localStorage.getItem('course')) : null,
   editCourse: false,
   paymentLoading: false,
 }
@@ -10,6 +10,7 @@ const initialState = {
 const courseSlice = createSlice({
   name: "course",
   initialState:initialState,  // initialState: [], ""
+
   reducers: {
     setStep: (state, action) => {
       state.step = action.payload

@@ -10,7 +10,6 @@ require("dotenv").config();
 
 //<-----sendOTP Handler---->
 exports.sendOTP = async (req, res) => {
-  console.log("Error identifed in SEND OTP Controller")
 
   try {
     // const email = req.body.email;
@@ -25,7 +24,8 @@ exports.sendOTP = async (req, res) => {
         message: "You are already registered"
       });
     }
-
+   
+   
     // Generate OTP
     let otpValue = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
@@ -33,11 +33,11 @@ exports.sendOTP = async (req, res) => {
       specialChars: false
     });
     console.log(`Generated OTP is: ${otpValue}`);
+   
 
-    //check unique otp exist or not in db   ->> Problem
+    //check unique otp exist or not in db   ->> Why Problem ?
     let result = OTP.findOne({ otp: otpValue });
     console.log("Bug");
-
 
     // Logic sahi kar yaha per
     while (result) {
@@ -48,6 +48,7 @@ exports.sendOTP = async (req, res) => {
       });
       result = await OTP.findOne({ otp: otpValue });
     }
+    console.log("Error identifed in SEND OTP Controller-2")
 
     //newOtp object is created using OTP model --> save the OTP to database with expiry of 5 minutes from now
     // const newOtp = new OTP({
@@ -57,12 +58,13 @@ exports.sendOTP = async (req, res) => {
     // });
     // await newOtp.save();
 
-    // create an entry in DB
+    //create an entry in DB
     //const otpPayload = { email, otpValue };
     const optBody = await OTP.create({
       email: email,
       otp: otpValue
     });
+
     // optBody.save();  // not required as we have used await before creating a record
     // console.log("OTP BODY: ", optBody);
 
@@ -73,6 +75,7 @@ exports.sendOTP = async (req, res) => {
     });
 
     // Send mail with generated OTP --|or|-- use pre hook of mongoose with 'save method
+ 
   } catch (error) {
 
     console.log("Error in sendOtp: ", error);
@@ -207,12 +210,10 @@ exports.userLogin = async (req, res) => {
       });
     }
 
-    console.log("existUser value-Login Handler line number-216: ");
 
     //check user exist or not
     let existUser = await User.findOne({ email: email }).populate("additionalDetails").exec();
 
-    console.log("existUser value-Login Handler line number-216: ", existUser);
 
     if (!existUser) {
       return res.status(404).json({

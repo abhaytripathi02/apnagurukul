@@ -4,9 +4,9 @@ import { Navigate } from "react-router-dom"
 
 function PrivateRoute({ children }) {
   // const { token } = useSelector((state) => state.auth)
-  const token = localStorage.getItem('token');
+  const token = JSON.parse(localStorage.getItem('token'));
   
-  console.log("Token", token);
+  // console.log("Token in Private Route: ", token);
 
   if (token !== null) {
     return children

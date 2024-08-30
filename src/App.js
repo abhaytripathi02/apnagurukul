@@ -22,14 +22,34 @@ import Settings from './components/core/Dashboard/Settings/index';
 import EnrolledCourses from './components/core/Dashboard/EnrolledCourses';
 import Cart from './components/core/Dashboard/Cart/index'
 import AddCourse from './components/core/Dashboard/AddCourse/index'
+import MyCourses from './components/core/Dashboard/MyCourses'
+import CourseDetails from './pages/CourseDetails'
 
-// import { useSelector } from 'react-redux';
+
+import { useSelector} from 'react-redux';
+import Catalog from './pages/Catalog';
+import { useEffect } from 'react';
+
+// import { setUser } from './slices/profileSlice';
+
+
 
 function App() {
 
-//  const {user} = useSelector((state)=> state.profile);
- const user = JSON.parse(localStorage.getItem('user'));
- console.log("User in App.js: ", user);
+  // const dispatch = useDispatch();
+  const user = useSelector((state) => state.profile.user);
+  // const user = JSON.parse(localStorage.getItem('user'));
+
+  // Fetch user from localStorage and update Redux state
+  // useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     const token = JSON.parse(localStorage.getItem("token"))
+  //     dispatch(getUserDetails(token, navigate))
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
+
+
 
   return (
     <div className='w-screen min-h-screen bg-richblack-900 flex flex-col font-inter '>
@@ -39,6 +59,8 @@ function App() {
           <Route path='*' element={<NotFound/>} />  
           <Route path='/about' element={<About/>} />   
           <Route path='/contact' element={<Contact/> } /> 
+          <Route path='/catalog/:catalogName' element={<Catalog/>}/>
+          <Route path="courses/:courseId" element={<CourseDetails/>} />
 
           {/* Open Route - for Only Non Logged in User */}
           <Route path='/login'
@@ -65,10 +87,10 @@ function App() {
                       <PrivateRoute>
                         <Dashboard/>
                       </PrivateRoute>
-                  } 
+          } 
             >
 
-            Why exact ?
+            {/* Why exact ? */}
 
            <Route path='/dashboard/my-profile'  element={ <MyProfile/>} />
            <Route path='/dashboard/settings' exact element={<Settings/>} />
@@ -76,29 +98,32 @@ function App() {
            {
             user?.accountType === 'Student' && ( 
               <>
-                <Route path='/dashboard/enrolled-courses' exact element={<EnrolledCourses/>} />
-                <Route path='/dashboard/cart' exact element={<Cart/>} />
+                <Route path='/dashboard/enrolled-courses'  element={<EnrolledCourses/>} />
+                <Route path='/dashboard/cart' element={<Cart/>} />
+              </>
+            )
+           }
+           
+           {/* Routes for instructor only */}
+           {
+            user?.accountType === 'Instructor' && ( 
+              <>
+              <Route path='/dashboard/add-course' element={<AddCourse/>} />
+               <Route path='/dashboard/my-courses' element={<MyCourses/>} />
+                
               </>
             )
            }
 
-           {
-            user?.accountType === 'Instructor' && ( 
-              <>
-                <Route path='/dashboard/add-course' exact element={<AddCourse/>} />
-              </>
-            )
-           }
           </Route>
 
 
 
           {/* Route for all users -students/instructor/admin */}
-         
 
           {/* Routes for Students only  */}
 
-          {/* Routes for instructor only */}
+       
 
           {/* Routes for Admin only   */}
 

@@ -5,27 +5,17 @@ import { useSelector } from 'react-redux'  // redux-toolkit
 import { AiOutlineShoppingCart } from 'react-icons/ai'
 
 import ProfileDropdown from '../core/Auth/ProfileDropdown'
-// import { apiConnector } from '../../../services/apiConnector'
-// import { Categories } from '../../../services/api'
+import { apiConnector } from '../../services/apiConnector'
+import { Categories } from '../../services/api'
 import { IoIosArrowDropdownCircle } from 'react-icons/io'
 import LOGO from '../../assets/Logo/ApnaGurukul-logo.png'
 
-// import ConfirmationModal from "../common/ConfirmationModal"
-// import { useDispatch } from 'react-redux'
-// import { useNavigate } from 'react-router-dom'
-// import {logout} from '../../services/operations/authAPI';
+import ConfirmationModal from "./ConfirmationModal"
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import {logout} from '../../services/operations/authAPI';
 
 
-const subLinks = [
-  {
-    title:'Python',
-    path:'/course/python'
-  },
-  {
-    title:'Web dev',
-    path:'/course/webdev'
-  }
-]
 
 const Navbar = () => {
 
@@ -33,33 +23,40 @@ const Navbar = () => {
   const Admin = "Admin";
 
   const {token} = useSelector((state) => state.auth);
-  const {user} = useSelector((state) => state.profile);
+  // const {user} = useSelector((state) => state.profile);
   const {totalItems} = useSelector((state) => state.cart);
+  const user = JSON.parse(localStorage.getItem('user'));
+  // const token = JSON.parse(localStorage.getItem('token'));
+
 
   // const dispatch = useDispatch();
   // const navigate = useNavigate();
 
   //To keep track of confirmation modal
-  // const [Modal, setModal] = useState(null);
+  const [Modal, setModal] = useState(null);
   // console.log("Logout modal in Navbar: ",Modal);
 
-  // const [subLink, setSubLink] = useState([]);
+  const [subLink, setSubLink] = useState([]);
+  console.log("setData-2: ", subLink)
+  
 
-  // const fetchSublinks = async()=>{
-  //     try{
-        // const result = await apiConnector("GET", Categories.GET_CATEGORIES);
-  //       setSubLink(result.data.data);
-  //       console.log(result);
-  //     }
-  //     catch(error){
-  //       console.log("Could not fetch category list");
-  //       console.log(Error);
-  //     }
-  //  }
+  const fetchSublinks = async()=>{
+      try{
+        const result = await apiConnector("GET", Categories.GET_CATEGORIES);
+        setSubLink(result.data.Categorys);
+      
+        console.log("setData: ", subLink);
+        console.log("Category data: ",result);
+      }
+      catch(error){
+        console.log("Could not fetch category list");
+        console.log(Error);
+      }
+   }
 
   // API Calls to backend to fetch category data
   useEffect(()=>{
-    //  fetchSublinks();
+     fetchSublinks();
   },[]);
 
   // match path 
@@ -109,18 +106,20 @@ const Navbar = () => {
                            </div> 
 
                            {
-                            subLinks.length ? (
+                            subLink.length ? (
                               <>
                                 {
-                                  subLinks.map((elem,index)=>(
-                                    <Link to={elem.path} key={index}>
-                                      <p className='font-bold'>{elem.title}</p>
-                                    </Link>
+                                  subLink.map((elem)=>(
+                                <Link
+                                  to={`/catalog/${elem.name.split(" ").join("-").toLowerCase()}`}
+                                  className="rounded-lg bg-transparent py-4 pl-4 hover:bg-richblack-50"
+                                  key={elem._id}
+                                >
+                                  <p>{elem.name}</p>
+                                </Link>
                                   ))
                                 }
                               </>
-                                
-                              
                             ) : ( <div></div> )
                            }        
 
@@ -150,10 +149,10 @@ const Navbar = () => {
             user && (user?.accountType !== Instructor || user?.accountType !== Admin) 
             && (
               <Link to='/dashboard/cart' className='relative'>
-                  <AiOutlineShoppingCart width="20px" height="20px"/>
+                  <AiOutlineShoppingCart width="20px" height="20px" className='text-white font-bold'/>
                   {
                     totalItems > 0 && (
-                      <span className='text-white font-bold'>
+                      <span className=' font-bold text-yellow-50 absolute top-[-10px] left-1'>
                         {totalItems}
                       </span>
                     )

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { FiUploadCloud } from "react-icons/fi"
-import { useSelector } from "react-redux"
 
+
+// video-react library is used 
 import "video-react/dist/video-react.css"
 import { Player } from "video-react"
 
@@ -16,7 +17,7 @@ export default function Upload({
   viewData = null,
   editData = null,
 }) {
-  const { course } = useSelector((state) => state.course)
+ 
   const [selectedFile, setSelectedFile] = useState(null)
   const [previewSource, setPreviewSource] = useState(
     viewData ? viewData : editData ? editData : ""
@@ -62,6 +63,7 @@ export default function Upload({
       <label className="text-sm text-richblack-5" htmlFor={name}>
         {label} {!viewData && <sup className="text-pink-200">*</sup>}
       </label>
+      
       <div
         className={`${
           isDragActive ? "bg-richblack-600" : "bg-richblack-700"
@@ -93,6 +95,7 @@ export default function Upload({
             )}
           </div>
         ) : (
+           
           <div
             className="flex w-full flex-col items-center p-6"
             {...getRootProps()}
@@ -121,3 +124,4 @@ export default function Upload({
     </div>
   )
 }
+ 

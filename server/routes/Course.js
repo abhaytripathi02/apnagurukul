@@ -8,11 +8,11 @@ const router = express.Router()
 const {
   createCourse,
   getAllCourses,
-  getCourseDetails,
+  getCourseDetails,   
+  editCourse,
 
   // Write controller for these handlers (_Pending_)
   getFullCourseDetails,
-  editCourse,
   getInstructorCourses,
   deleteCourse,
 
@@ -24,7 +24,7 @@ const {
 const {
   showAllCategories,
   createCategory ,
-  categoryPageDetails,
+  CategoryPageDetails,
 } = require("../controllers/category")
 
 // Sections Controllers Import
@@ -64,7 +64,7 @@ const { auth, isInstructor, isStudent, isAdmin } = require("../middlewares/auth"
 // Courses can Only be Created by Instructors
 router.post("/createCourse", auth, isInstructor, createCourse)
 // Edit Course routes
-// router.post("/editCourse", auth, isInstructor, editCourse)
+router.post("/editCourse", auth, isInstructor, editCourse)
 //********************************[ Section ]**************************************//
 //Add a Section to a Course
 router.post("/addSection", auth, isInstructor, createSection)
@@ -81,11 +81,13 @@ router.post("/deleteSubSection", auth, isInstructor, deleteSubSection)
 router.post("/addSubSection", auth, isInstructor, createSubSection)
 //*****************************************************************************/
 // Get all Courses Under a Specific Instructor
-// router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
+router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
+
+
 // Get all Registered Courses
 router.get("/getAllCourses", getAllCourses)
 // Get Details for a Specific Courses
-router.get("/getCourseDetails", getCourseDetails)
+router.post("/getCourseDetails", getCourseDetails);
 // Get Details for a Specific Courses
 // router.post("/getFullCourseDetails", auth, getFullCourseDetails)
 // To Update Course Progress
@@ -93,7 +95,7 @@ router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress)
 // To get Course Progress
 // router.post("/getProgressPercentage", auth, isStudent, getProgressPercentage)
 // Delete a Course
-// router.delete("/deleteCourse", deleteCourse)
+router.delete("/deleteCourse", deleteCourse)
 
 // ********************************************************************************************************
 //                                      Category routes (Only by Admin)
@@ -101,7 +103,7 @@ router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress)
 // Category can Only be Created by Admin
 router.post("/createCategory", auth, isAdmin, createCategory)
 router.get("/showAllCategories", showAllCategories)
-// router.post("/getCategoryPageDetails", categoryPageDetails)
+router.post("/getCategoryPageDetails", CategoryPageDetails);
 
 // ********************************************************************************************************
 //                                      Rating and Review

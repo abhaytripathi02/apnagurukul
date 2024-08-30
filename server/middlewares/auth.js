@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const User = require("../models/User");
+
 
 //auth - handler
 exports.auth = async (req, res, next) => {
@@ -8,7 +8,7 @@ exports.auth = async (req, res, next) => {
     const token =
       req.cookies.token ||
       req.body.token ||
-      req.header("Authorisation").replace("Bearer ", "");
+      req.header("Authorization").replace("Bearer ", "");
 
     // if token is missing
     if (!token) {
@@ -26,6 +26,7 @@ exports.auth = async (req, res, next) => {
       console.log("Decoded Token :", decode);
 
       // req.user = await User.findById(decode.id);
+      //token ---> 
       req.user = decode;
 
     } catch (error) {

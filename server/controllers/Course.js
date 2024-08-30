@@ -2,6 +2,8 @@ const Course = require("../models/Course");
 const Category = require("../models/Category");
 const User = require("../models/User");
 const imageUploader = require("../utils/imageUploader");
+const Section  = require("../models/Section");
+const SubSection  = require('../models/SubSection');
 
 require("dotenv").config();
 
@@ -15,7 +17,8 @@ exports.createCourse = async (req, res) => {
       whatYouWillLearn,
       price,
       category,
-      tags
+      tags,
+      requirements
     } = req.body;
 
     //get thumnail image
@@ -28,7 +31,8 @@ exports.createCourse = async (req, res) => {
       !whatYouWillLearn ||
       !price ||
       !category ||
-      !tags
+      !tags ||
+      !requirements
     ) {
       return res.status(401).json({
         success: false,
@@ -77,9 +81,12 @@ exports.createCourse = async (req, res) => {
       instructor: instructorDetails._id,
       category: categoryDetails._id,
       thumbnail: thumbnailImage.secure_url,
-      tags: tags
+      tags: tags,
+      courseRequirements: requirements
     });
 
+    newCourse.populate('category');
+    
     //add the new course to the UserSchema of Instructor
     await User.findByIdAndUpdate(
       { _id: instructorDetails._id },
@@ -159,8 +166,8 @@ exports.getCourseDetails = async (req, res) => {
     //find course
     const courseDetails = await Course.findById({ _id: courseId })
       .populate({ path: "instructor", populate: { path: "additionalDetails" } })
-      .populate("RatingAndReviews")
-      .populate({ path: "categoryId" })
+      // .populate("RatingAndReviews")
+      .populate({ path: "category" })
       .populate({ path: "courseContent", populate: { path: "subSection" } })
       .exec();
 
@@ -186,6 +193,171 @@ exports.getCourseDetails = async (req, res) => {
   }
 };
 
-//Delete_Course
 
-//Update/Edit_Course Details
+// Edit Course Details
+exports.editCourse = async (req, res) => {
+  try {
+    const { courseId } = req.body
+    const updates = req.body;
+    console.log("updates: ", updates);
+
+    const course = await Course.findById(courseId)
+
+    if (!course) {
+      return res.status(404).json({ error: "Course not found" })
+    }
+
+    // If Thumbnail Image is found, update it
+    if (req.files) {
+      console.log("thumbnail update", req.files)
+      const thumbnail = req.files.thumbnail_Img;
+
+      // upload thumbnail to cloudinary
+      const thumbnailImage = await uploadImageToCloudinary(
+        thumbnail,
+        process.env.FOLDER_NAME
+      )
+      course.thumbnail = thumbnailImage.secure_url
+    }
+
+    // understand this logic 
+    // Update only the fields that are present in the request body
+    for (const key in updates) {
+      if (updates.hasOwnProperty(key)) {
+        if (key === "tags" || key === "courseRequirements") {
+          course[key] = JSON.parse(updates[key])
+        } else {
+          course[key] = updates[key]   // course.key = updates.key
+        }
+      }
+    }
+
+    await course.save()
+
+    const updatedCourse = await Course.findOne({
+      _id: courseId,
+    })
+      .populate({
+        path: "instructor",
+        populate: {
+          path: "additionalDetails",
+        },
+      })
+      .populate("category")
+      .populate("RatingAndReviews")
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      })
+      .exec()
+
+    res.json({
+      success: true,
+      message: "Course updated successfully",
+      data: updatedCourse,
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    })
+  }
+}
+
+
+// Delete the Course
+exports.deleteCourse = async (req, res) => {
+  try {
+    const { courseId } = req.body;
+
+
+    // Find the course
+    const course = await Course.findById(courseId);
+    
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" })
+    }
+
+    // Unenroll students from the course
+    const studentsEnrolled = course.studentsEnrolled;
+
+    for (const studentId of studentsEnrolled) {
+      await User.findByIdAndUpdate(studentId, {
+        $pull: { courses: courseId },
+      })
+    }
+
+    // Delete sections and sub-sections
+    const courseSections = course.courseContent;
+
+    for (const sectionId of courseSections) {
+      // Delete sub-sections of the section
+      const section = await Section.findById(sectionId)
+      if (section) {
+        const subSections = section.subSection
+        for (const subSectionId of subSections) {
+          await SubSection.findByIdAndDelete(subSectionId)
+        }
+      }
+
+      // Delete the section
+      await Section.findByIdAndDelete(sectionId)
+    }
+
+    // Delete the course
+    await Course.findByIdAndDelete(courseId)
+
+    return res.status(200).json({
+      success: true,
+      message: "Course deleted successfully",
+    })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    })
+  }
+}
+
+
+exports.getInstructorCourses = async (req, res) => {
+  try {
+
+    // token contains - email, accountType, userId
+    const {email, id} = req.user;
+    
+    if(!id){
+      return res.status(401).json({success: false, message: "Unauthorized, id not found"})
+    }
+
+    const getUser = await User.findById(id).populate("courses");
+
+    if(!getUser){
+      return res.status(404).json({success: false, message: "User not found"})
+    }
+    
+    if(getUser.accountType !== 'Instructor'){
+      return res.status(403).json({success: false, message: "Forbidden, only instructors"})
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Courses retrieved successfully",
+      data: getUser.courses
+    })
+
+  } catch (error) {
+     console.log(error);
+     return res.status(500).json({
+      success: false,
+      error:error.message,
+      message: "Server error while fetching Courses",
+     })
+  }
+}

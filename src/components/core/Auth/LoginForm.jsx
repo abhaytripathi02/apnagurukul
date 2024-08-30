@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch} from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import { login } from "../../../services/operations/authAPI"
+import {toast} from "react-hot-toast"
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -26,13 +27,10 @@ function LoginForm() {
   }
 
   const handleOnSubmit = async(e) => {
-    e.preventDefault()
+    e.preventDefault();
     
-     dispatch(login(email, password, navigate))
-     console.log("Yaha aaa gaya")
-   
-    
-    // navigate("/dashboard/my-profile");
+    dispatch(login(email, password, navigate))
+     
   }
 
   return (
@@ -89,7 +87,7 @@ function LoginForm() {
       >
         Log In
       </button>
-    </form>
+      </form>
   )
 }
 

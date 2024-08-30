@@ -12,19 +12,19 @@ import { Toaster } from 'react-hot-toast';
 
 const store  = configureStore({
    reducer: rootReducer
-})
+});
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
-  <React.StrictMode>
     <Provider store = {store}>
       <BrowserRouter>
         <App />
         <Toaster/>
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>
 
 );
 

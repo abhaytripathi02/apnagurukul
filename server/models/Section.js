@@ -9,11 +9,7 @@ const SectionSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref:"SubSection"
   }],
-  // <--Not required-->
-  // courseId:{
-  //   type: mongoose.Schema.Types.ObjectId,
-  // }
-  
+
 });
 
 module.exports = mongoose.model("Section", SectionSchema);

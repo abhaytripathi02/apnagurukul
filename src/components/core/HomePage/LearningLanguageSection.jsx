@@ -24,7 +24,7 @@ const LearningLanguageSection = () => {
               </div>
 
               <div className='object-contain z-10'> 
-                <img src={ComparewithOthers} alt="PlanYourLesson" srcset="" />
+                <img src={ComparewithOthers} alt="PlanYourLesson"  />
               </div>
 
               <div className='object-contain translate-x-[-130px] z-20'>

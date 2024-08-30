@@ -30,7 +30,7 @@ router.post("/login", userLogin)
 router.post("/signup", signUp)
 
 // Route for sending OTP to the user's email
-router.post("/auth/sendotp", sendOTP)   
+router.post("/sendotp", sendOTP)  
 
 // Route for Changing the password
 router.post("/changepassword", auth, changePassword)

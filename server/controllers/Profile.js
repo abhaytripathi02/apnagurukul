@@ -5,7 +5,6 @@ const CourseProgress = require("../models/CourseProgress");
 const { convertSecondsToDuration } = require("../utils/secToDuration");
 const {imageUploadToCloudinary} = require("../utils/imageUploader");
 
-const mongoose = require("mongoose")
 
 //Create Profile 
 exports.createProfile = async (req, res) => {
@@ -237,10 +236,8 @@ exports.updateDisplayPicture = async (req, res) => {
 //Get Enrolled Courses by Students
 exports.getEnrolledCourses = async (req, res) => {
   try {
-    const userId = req.user.id
-    let userDetails = await User.findOne({
-      _id: userId,
-    })
+    const userId = req.user.id;
+    let userDetails = await User.findOne({ _id: userId })
       .populate({
         path: "courses",
         populate: {
@@ -249,8 +246,8 @@ exports.getEnrolledCourses = async (req, res) => {
             path: "subSection",
           },
         },
-      })
-      .exec()
+      }).exec()
+
     userDetails = userDetails.toObject();
 
     var SubsectionLength = 0;
@@ -280,10 +277,7 @@ exports.getEnrolledCourses = async (req, res) => {
       } else {
         // To make it up to 2 decimal point
         const multiplier = Math.pow(10, 2)
-        userDetails.courses[i].progressPercentage =
-          Math.round(
-            (courseProgressCount / SubsectionLength) * 100 * multiplier
-          ) / multiplier
+        userDetails.courses[i].progressPercentage = Math.round((courseProgressCount / SubsectionLength) * 100 * multiplier) / multiplier
       }
     }
 

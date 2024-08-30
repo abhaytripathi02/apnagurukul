@@ -1,5 +1,8 @@
 const Category = require("../models/Category"); // ->> Tag is replaced by Category
-const Course = require("../models/Course");
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max)
+}
 
 //create Category Handler function
 exports.createCategory = async (req, res) => {
@@ -73,8 +76,9 @@ exports.CategoryPageDetails = async (req, res) => {
     const selectedCategory = await Category.findById(categoryId)
       .populate({
         path: "courses",
-        match: { status: "Published" },
-        populate: "ratingAndReviews"
+        // match: { status: "Published" },
+        // populate: "ratingAndReviews"
+        populate:"instructor"
       })
       .exec();
 
@@ -105,32 +109,28 @@ exports.CategoryPageDetails = async (req, res) => {
     let differentCategory = await Category.findOne(
       categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]
         ._id
-    )
-      .populate({
+    ).populate({
         path: "courses",
-        match: { status: "Published" }
-      })
-      .exec();
+        // match: { status: "Published" }
+      }).exec();
 
     // Get top-3-selling courses across all categories
-    const allCategories = await Category.find()
-      .populate({
-        path: "courses",
-        match: { status: "Published" }
-      })
-      .exec();
+    // const allCategories = await Category.find()
+    //   .populate({
+    //     path: "courses",
+    //     // match: { status: "Published" }
+    //   })
+    //   .exec();
+
     // Think Logic  -> If a course from other category has more buy
-    const allCourses = allCategories.flatMap(category => category.courses);
-    const mostSellingCourses = allCourses
-      .sort((a, b) => b.sold - a.sold)
-      .slice(0, 10);
+    // const allCourses = allCategories.flatMap(category => category.courses);
+    // const mostSellingCourses = allCourses.sort((a, b) => b.sold - a.sold).slice(0, 10);
 
     return res.status(200).json({
       success: true,
       data: {
         selectedCategory,
         differentCategory,
-        mostSellingCourses
       }
     });
   } catch (error) {

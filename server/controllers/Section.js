@@ -7,6 +7,7 @@ exports.createSection = async (req, res) => {
     //data fetch
     const { sectionName, courseId } = req.body;
     console.log("sectionName: ", sectionName, " CourseId: ", courseId);
+
     //data validation
     if (!sectionName || !courseId) {
       return res.status(400).json({
@@ -43,8 +44,8 @@ exports.createSection = async (req, res) => {
       message: "Section Created Successfully",
       updatedCourse
     });
+
   } catch (error) {
-    console.log("Error-->", error);
     return res.status(404).json({
       success: false,
       message: "Error While creating section",
@@ -52,6 +53,7 @@ exports.createSection = async (req, res) => {
     });
   }
 };
+
 
 //Update Section Handler
 exports.updateSection = async (req, res) => {
@@ -71,7 +73,8 @@ exports.updateSection = async (req, res) => {
       { sectionName },
       { new: true }
     );
-   console.log("UpdatedSection:-->", updatedSectionDetails)
+   // console.log("UpdatedSection:-->", updatedSectionDetails)
+
     return res.status(200).json({
       success: true,
       message: "Section Updated Successfully!",
@@ -91,18 +94,27 @@ exports.updateSection = async (req, res) => {
 exports.deleteSection = async (req, res) => {
   try {
     //get-ID assuming that we are sending
-    const { sectionId, courseId } = req.params;
-    // const { sectionId, courseId } = req.body;
+    const { sectionId, courseId } = req.body;
+    // const { sectionId, courseId } = req.params;  // why?
 
-    await Section.findByIdAndDelete({ sectionId });
+    await Section.findByIdAndDelete({ _id:sectionId });
     //TODO:[Testing Time] Do we need to delete entry from the Course Schema
     // Course ko update karo
+    
+    const updatedCourse = await Course.findByIdAndUpdate({_id:courseId},
+      {
+        $pull:{courseContent:sectionId}
+      },
+      {new:true}
+    ).populate({path:"courseContent", populate: { path: "subSection" } });
 
     return res.status(200).json({
       success: true,
-      message: "Section deleted successfully"
+      message: "Section deleted successfully",
+      data:updatedCourse
     });
   } catch (error) {
+
     return res.status(500).json({
       success: false,
       message: "Error while updating section",

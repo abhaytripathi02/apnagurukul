@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 function VerifyEmail() {
   const [otp, setOtp] = useState("");
   const { signupData, loading } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,6 +23,7 @@ function VerifyEmail() {
 
   const handleVerifyAndSignup = (e) => {
     e.preventDefault();
+
     const {
       accountType,
       firstName,
@@ -59,6 +61,7 @@ function VerifyEmail() {
           <p className="text-[1.125rem] leading-[1.625rem] my-4 text-richblack-100">
             A verification code has been sent to you. Enter the code below
           </p>
+          
           <form onSubmit={handleVerifyAndSignup}>
             <OtpInput
               value={otp}

@@ -12,7 +12,8 @@ const {
   SEND_PAYMENT_SUCCESS_EMAIL_API,
 } = studentEndpoints
 
-// Load the Razorpay SDK from the CDN
+// Load the Razorpay SDK from the CDN 
+// <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 function loadScript(src) {
   return new Promise((resolve) => {
     const script = document.createElement("script")
@@ -35,6 +36,9 @@ export async function BuyCourse(
   navigate,
   dispatch
 ) {
+  console.log("Courses:", courses);
+  console.log("User-Detilas:", user_details);
+
   const toastId = toast.loading("Loading...")
   try {
     // Loading the script of Razorpay SDK
@@ -51,12 +55,8 @@ export async function BuyCourse(
     const orderResponse = await apiConnector(
       "POST",
       COURSE_PAYMENT_API,
-      {
-        courses,
-      },
-      {
-        Authorization: `Bearer ${token}`,
-      }
+      {courses},
+      {Authorization: `Bearer ${token}`}
     )
 
     if (!orderResponse.data.success) {
@@ -70,7 +70,7 @@ export async function BuyCourse(
       currency: orderResponse.data.data.currency,
       amount: `${orderResponse.data.data.amount}`,
       order_id: orderResponse.data.data.id,
-      name: "StudyNotion",
+      name: "ApnaGurukul",
       description: "Thank you for Purchasing the Course.",
       image: rzpLogo,
       prefill: {
@@ -82,9 +82,9 @@ export async function BuyCourse(
         verifyPayment({ ...response, courses }, token, navigate, dispatch)
       },
     }
-    const paymentObject = new window.Razorpay(options)
+    const paymentObject = new window.Razorpay(options);
 
-    paymentObject.open()
+    paymentObject.open();
     paymentObject.on("payment.failed", function (response) {
       toast.error("Oops! Payment Failed.")
       console.log(response.error)

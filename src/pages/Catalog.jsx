@@ -4,29 +4,32 @@ import { useParams } from "react-router-dom"
 
 // import CourseCard from "../components/Catalog/CourseCard"
 // import CourseSlider from "../components/Catalog/CourseSlider"
+
 import Footer from "../components/common/Footer"
-import Course_Card from "../components/core/Catalog/Course_Card"
-import Course_Slider from "../components/core/Catalog/Course_Slider"
+import CourseCard from "../components/core/Catalog/Course_Card"
+import CourseSlider from "../components/core/Catalog/Course_Slider"
 import { apiConnector } from "../services/apiConnector"
-import { categories } from "../services/apis"
+import { Categories } from "../services/api"
 import { getCatalogPageData } from "../services/operations/pageAndComponntDatas"
 import Error from "./Error"
 
 function Catalog() {
+
   const { loading } = useSelector((state) => state.profile)
-  const { catalogName } = useParams()
+  const { catalogName } = useParams();
   const [active, setActive] = useState(1)
   const [catalogPageData, setCatalogPageData] = useState(null)
   const [categoryId, setCategoryId] = useState("")
+  console.log("Category id-2: ", categoryId );
+
   // Fetch All Categories
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       try {
-        const res = await apiConnector("GET", categories.CATEGORIES_API)
-        const category_id = res?.data?.data?.filter(
-          (ct) => ct.name.split(" ").join("-").toLowerCase() === catalogName
-        )[0]._id
-        setCategoryId(category_id)
+        const res = await apiConnector("GET",  Categories.GET_CATEGORIES);
+        console.log("Response of Categories.GetGategories:", res);
+        const category_id = res?.data?.Categorys?.filter((ct) => ct.name.split(" ").join("-").toLowerCase() === catalogName)[0]._id;
+        setCategoryId(category_id);
       } catch (error) {
         console.log("Could not fetch Categories.", error)
       }
@@ -34,15 +37,19 @@ function Catalog() {
   }, [catalogName]);
   
   useEffect(() => {
+    console.log("Category id: ", categoryId );
     if (categoryId) {
-      ;(async () => {
+      console.log("Debugging-1");
+      (async () => {
         try {
-          const res = await getCatalogPageData(categoryId)
-          setCatalogPageData(res)
+          const result = await getCatalogPageData(categoryId);
+          console.log("Category page data: ", result);
+          setCatalogPageData(result);
+
         } catch (error) {
           console.log(error)
         }
-      })()
+      })()  
     }
   }, [categoryId])
 
@@ -79,7 +86,7 @@ function Catalog() {
 
       {/* Section 1 */}
       <div className=" mx-auto box-content w-full max-w-maxContentTab px-4 py-12 lg:max-w-maxContent">
-        <div className="section_heading">Courses to get you started</div>
+        <div className="section_heading text-white text-2xl">Courses to get you started</div>
         <div className="my-4 flex border-b border-b-richblack-600 text-sm">
           <p
             className={`px-4 py-2 ${
@@ -103,18 +110,19 @@ function Catalog() {
           </p>
         </div>
         <div>
-          <Course_Slider
+          <CourseSlider
             Courses={catalogPageData?.data?.selectedCategory?.courses}
           />
         </div>
       </div>
+
       {/* Section 2 */}
       <div className=" mx-auto box-content w-full max-w-maxContentTab px-4 py-12 lg:max-w-maxContent">
-        <div className="section_heading">
+        <div className="section_heading text-white text-2xl">
           Top courses in {catalogPageData?.data?.differentCategory?.name}
         </div>
         <div className="py-8">
-          <Course_Slider
+          <CourseSlider
             Courses={catalogPageData?.data?.differentCategory?.courses}
           />
         </div>
@@ -122,13 +130,11 @@ function Catalog() {
 
       {/* Section 3 */}
       <div className=" mx-auto box-content w-full max-w-maxContentTab px-4 py-12 lg:max-w-maxContent">
-        <div className="section_heading">Frequently Bought</div>
+        <div className="section_heading text-white text-2xl">Frequently Bought</div>
         <div className="py-8">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {catalogPageData?.data?.mostSellingCourses
-              ?.slice(0, 4)
-              .map((course, i) => (
-                <Course_Card course={course} key={i} Height={"h-[400px]"} />
+            {catalogPageData?.data?.mostSellingCourses?.slice(0, 4).map((course, i) => (
+                <CourseCard course={course} key={i} Height={"h-[400px]"} />
               ))}
           </div>
         </div>

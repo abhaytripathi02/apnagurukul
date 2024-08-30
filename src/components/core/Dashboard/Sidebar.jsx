@@ -15,9 +15,9 @@ export default function Sidebar() {
 
   // Not Working - I think setUser() is not working properly in profileSlice
   const { user} = useSelector((state) => state.profile); 
+
   console.log("User in Sidebar: ", user);
 
-  const getUser = JSON.parse(localStorage.getItem("user"));
 
 
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ export default function Sidebar() {
         <div className="flex flex-col">
           {sidebarLinks.map((link) => {
             {/* if (link.type && user?.accountType !== link.type) return null; */}
-            if (link.type && getUser.accountType !== link.type) return null;
+            if (link.type && user.accountType !== link.type) return null;
             
             return (
               <SidebarLink key={link.id} link={link} iconName={link.icon} />
@@ -60,7 +60,7 @@ export default function Sidebar() {
           <button
             onClick={() =>
               setConfirmationModal({
-                text1: "Are you sure Sidebar?",
+                text1: "Are you sure ?",
                 text2: "You will be logged out of your account.",
                 btn1Text: "Logout",
                 btn2Text: "Cancel",

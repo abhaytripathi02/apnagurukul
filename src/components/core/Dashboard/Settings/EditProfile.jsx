@@ -47,10 +47,10 @@ export default function EditProfile() {
                 name="firstName"
                 id="firstName"
                 placeholder="Enter first name"
-                className="form-style rounded-sm pl-1"
+                className="form-style rounded-sm pl-1" 
                 {...register("firstName", { required: true })}
-                // defaultValue={user?.firstName}
-                value={user?.firstName} // we can use this attribute also to set default value
+                defaultValue={user?.firstName}
+                // value={user?.firstName} // we can use this attribute also to set default value- wrong why ?
               />
               {errors.firstName && (
                 <span className="-mt-1 text-[12px] text-yellow-100">
@@ -68,7 +68,7 @@ export default function EditProfile() {
                 id="lastName"
                 placeholder="Enter first name"
                 className="form-style rounded-sm pl-1"
-                {...register("lastName", { required: true })}
+                {...register("lastName")}
                 defaultValue={user?.lastName}
               />
               {errors.lastName && (

@@ -27,7 +27,9 @@ export default function CourseBuilderForm() {
     formState: { errors },
   } = useForm()
 
-  const { course } = useSelector((state) => state.course)
+  const { course } = useSelector((state) => state.course);
+  // const course = JSON.parse(localStorage.getItem('course'));
+
   const { token } = useSelector((state) => state.auth)
   const [loading, setLoading] = useState(false)
   const [editSectionName, setEditSectionName] = useState(null)
@@ -35,10 +37,13 @@ export default function CourseBuilderForm() {
 
   // handle form submission
   const onSubmit = async (data) => {
-    console.log(data)
+    console.log("Course Builder Form Data:",data)
+
+    console.log("Course State in 2nd step: ", course);
+
     setLoading(true)
 
-    let result
+    let result;
 
     if (editSectionName) {
       result = await updateSection({ sectionName: data.sectionName,
@@ -57,12 +62,14 @@ export default function CourseBuilderForm() {
         token
       )
     }
+
     if (result) {
-      // console.log("section result", result)
+      console.log("section result: ", result)
       dispatch(setCourse(result))
-      setEditSectionName(null)
-      setValue("sectionName", "")
+      setEditSectionName(null);
+      setValue("sectionName", "");
     }
+
     setLoading(false)
   }
 
@@ -73,7 +80,7 @@ export default function CourseBuilderForm() {
 
   const handleChangeEditSectionName = (sectionId, sectionName) => {
     if (editSectionName === sectionId) {
-      cancelEdit()
+      cancelEdit();
       return
     }
     setEditSectionName(sectionId)
@@ -91,14 +98,14 @@ export default function CourseBuilderForm() {
       toast.error("Please add atleast one lecture in each section")
       return
     }
+
     dispatch(setStep(3));
   }
 
   // Back Button Logic
   const goBack = () => {;
-    dispatch(setStep(1))
+    dispatch(setStep(1));
     dispatch(setEditCourse(true));
-    // dispatch(setEditCourse(false));
   }
 
   return (
@@ -140,7 +147,7 @@ export default function CourseBuilderForm() {
             <button
               type="button"
               onClick={cancelEdit}
-              className="text-sm text-richblack-300 underline"
+              className="text-sm text-richblack-300"
             >
               Cancel Edit
             </button>
@@ -148,7 +155,7 @@ export default function CourseBuilderForm() {
         </div>
       </form>
 
-
+      {/* Nested View for Section and Subsection  */}
       {course?.courseContent.length > 0 && (
         <NestedView handleChangeEditSectionName={handleChangeEditSectionName} />
       )}

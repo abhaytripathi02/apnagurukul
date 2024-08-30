@@ -11,12 +11,13 @@ import { RiDeleteBin6Line } from "react-icons/ri"
 import { useNavigate } from "react-router-dom"
 
 import { formatDate } from "../../../../services/formatDate"
+
 import {
   deleteCourse,
   fetchInstructorCourses,
 } from "../../../../services/operations/courseDetailsAPI"
 import { COURSE_STATUS } from "../../../../utils/constants"
-import ConfirmationModal from "../../../Common/ConfirmationModal"
+import ConfirmationModal from "../../../common/ConfirmationModal"
 
 export default function CoursesTable({ courses, setCourses }) {
   const dispatch = useDispatch()
@@ -27,9 +28,12 @@ export default function CoursesTable({ courses, setCourses }) {
   const TRUNCATE_LENGTH = 30
 
   const handleCourseDelete = async (courseId) => {
-    setLoading(true)
-    await deleteCourse({ courseId: courseId }, token)
+    setLoading(true);
+    console.log("debug-1");
+    await deleteCourse({ courseId: courseId }, token);
+    console.log("debug-2");
     const result = await fetchInstructorCourses(token)
+    console.log("debug-3");
     if (result) {
       setCourses(result)
     }
@@ -126,6 +130,7 @@ export default function CoursesTable({ courses, setCourses }) {
                   >
                     <FiEdit2 size={20} />
                   </button>
+
                   <button
                     disabled={loading}
                     onClick={() => {

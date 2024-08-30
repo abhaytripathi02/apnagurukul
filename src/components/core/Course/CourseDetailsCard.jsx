@@ -72,19 +72,19 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
           </div>
           <div className="flex flex-col gap-4">
             <button
-              className="yellowButton"
+              className="yellowButton text-black border bg-yellow-300"
               onClick={
-                user && course?.studentsEnroled.includes(user?._id)
+                user && course?.studentsEnrolled.includes(user?._id)
                   ? () => navigate("/dashboard/enrolled-courses")
                   : handleBuyCourse
               }
             >
-              {user && course?.studentsEnroled.includes(user?._id)
+              {user && course?.studentsEnrolled.includes(user?._id)
                 ? "Go To Course"
                 : "Buy Now"}
             </button>
-            {(!user || !course?.studentsEnroled.includes(user?._id)) && (
-              <button onClick={handleAddToCart} className="blackButton">
+            {(!user || !course?.studentsEnrolled.includes(user?._id)) && (
+              <button onClick={handleAddToCart} className="text-black border bg-white">
                 Add to Cart
               </button>
             )}
@@ -94,22 +94,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
               30-Day Money-Back Guarantee
             </p>
           </div>
-
-          <div className={``}>
-            <p className={`my-2 text-xl font-semibold `}>
-              This Course Includes :
-            </p>
-            <div className="flex flex-col gap-3 text-sm text-caribbeangreen-100">
-              {course?.instructions?.map((item, i) => {
-                return (
-                  <p className={`flex gap-2`} key={i}>
-                    <BsFillCaretRightFill />
-                    <span>{item}</span>
-                  </p>
-                )
-              })}
-            </div>
-          </div>
+          
           <div className="text-center">
             <button
               className="mx-auto flex items-center gap-2 py-6 text-yellow-100 "

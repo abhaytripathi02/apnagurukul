@@ -13,7 +13,9 @@ export default function PublishCourse() {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { token } = useSelector((state) => state.auth)
+  // const { token } = useSelector((state) => state.auth)
+  const token = JSON.parse(localStorage.getItem('token'));
+
   const { course } = useSelector((state) => state.course)
   const [loading, setLoading] = useState(false)
 

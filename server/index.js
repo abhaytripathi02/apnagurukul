@@ -6,7 +6,7 @@ const app = express();
 const userRoutes = require("./routes/userAuth");
 const profileRoutes = require("./routes/profile");
 const courseRoutes = require("./routes/Course");
-// const paymentRoutes = require("./routes/Payments");
+const paymentRoutes = require("./routes/Payments");
 const contactUsRoute = require("./routes/Contact");
 
 //import database connection
@@ -27,7 +27,6 @@ dotenv.config();
 // Connecting to database
 database.dbconnect();
 
-// Middlewares
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
@@ -51,7 +50,7 @@ cloudinaryConnect();
 app.use("/api/v1/auth", userRoutes); 
 app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/course", courseRoutes);
-// app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/reach", contactUsRoute);
 
 // Testing the server
@@ -66,6 +65,22 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`App is listening at ${PORT}`);
 });
+
+
+
+// Q. Demonstrate the concept of promise
+// const fetchData = () =>{
+//   // returing the promise
+//   return new Promise((resolve, reject) => {
+//     fetch('https://jsonplaceholder.typicode.com/posts')
+//     .then((response)=> response.json)
+//     .then((data)=> resolve(data))
+//     .catch((error)=>reject(error))
+//     .finally(()=> console.log('Finally statement is running'))
+//   });
+// };
+// // fetching data 
+// fetchData().then(data => console.log(data)).catch(error => console.error(error));
 
 // ----------------------------------------< End of code >----------------------------------------------
 
