@@ -59,6 +59,8 @@ export async function BuyCourse(
       {Authorization: `Bearer ${token}`}
     )
 
+    console.log("Order:", orderResponse);
+
     if (!orderResponse.data.success) {
       throw new Error(orderResponse.data.message)
     }
@@ -67,9 +69,9 @@ export async function BuyCourse(
     // Opening the Razorpay SDK
     const options = {
       key: process.env.RAZORPAY_KEY,
-      currency: orderResponse.data.data.currency,
-      amount: `${orderResponse.data.data.amount}`,
-      order_id: orderResponse.data.data.id,
+      currency: orderResponse.data.message.currency,
+      amount: `${orderResponse.data.message.amount}`,
+      order_id: orderResponse.data.message.id,
       name: "ApnaGurukul",
       description: "Thank you for Purchasing the Course.",
       image: rzpLogo,
