@@ -39,7 +39,7 @@ exports.createCategory = async (req, res) => {
 
 
 // getAll Categorys 
-exports.showAllCategories = async (req, res, next) => {
+exports.showAllCategories = async (req, res) => {
   try {
     const AllCategorys = await Category.find({}, { name: true, description: true });
     // const AllCategorys = await Category.find();
