@@ -12,7 +12,7 @@ export const  apiConnector = (method, url, bodyData, headers, params) => {
         method: `${method}`,
         url: `${url}`,
         data: bodyData ? bodyData : null,
-        headers: headers ? headers : null, 
+        headers: headers ? headers : { "Access-Control-Allow-Origin": "https://apnagurukul-server.vercel.app/" }, 
         params: params ? params : null,
     });
 }
