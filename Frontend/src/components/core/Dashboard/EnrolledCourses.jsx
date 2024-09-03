@@ -8,22 +8,22 @@ import { getUserEnrolledCourses } from "../../../services/operations/profileAPI"
 
 export default function EnrolledCourses() {
 
-  const { token } = useSelector((state) => state.auth)
-  const navigate = useNavigate()
+  const { token } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  const [enrolledCourses, setEnrolledCourses] = useState(null)
+  const [enrolledCourses, setEnrolledCourses] = useState(null);
 
   useEffect(() => {
     (async () => {
 
       try {
-        const response = await getUserEnrolledCourses(token) // Getting all the published and the drafted courses
-
+        const response = await getUserEnrolledCourses(token); // Getting all the published and the drafted courses
+         console.log("Response: ", response);
         // Filtering the published course out
-        const filterPublishCourse = response.filter((ele) => ele.status !== "Draft");
-        // console.log( "Viewing all the couse that is Published: ", filterPublishCourse)
+        // const filterPublishCourse = response.filter((ele) => ele.status !== "Draft");
+        // console.log( "Viewing all the couse that is Published: ", filterPublishCourse);
 
-        setEnrolledCourses(filterPublishCourse);
+        setEnrolledCourses(response);
         
       } catch (error) {
         console.log("Could not fetch enrolled courses.")

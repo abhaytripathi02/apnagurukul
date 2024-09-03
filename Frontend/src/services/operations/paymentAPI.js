@@ -59,7 +59,7 @@ export async function BuyCourse(
       {Authorization: `Bearer ${token}`}
     )
 
-    console.log("Order:", orderResponse);
+    console.log("orderResponse:", orderResponse);
 
     if (!orderResponse.data.success) {
       throw new Error(orderResponse.data.message)
@@ -80,10 +80,12 @@ export async function BuyCourse(
         email: user_details.email,
       },
       handler: function (response) {
-        sendPaymentSuccessEmail(response, orderResponse.data.data.amount, token)
+        sendPaymentSuccessEmail(response, orderResponse.data.message.amount, token)
         verifyPayment({ ...response, courses }, token, navigate, dispatch)
       },
     }
+
+    
     const paymentObject = new window.Razorpay(options);
 
     paymentObject.open();
@@ -100,6 +102,8 @@ export async function BuyCourse(
 
 // Verify the Payment
 async function verifyPayment(bodyData, token, navigate, dispatch) {
+  console.log("verify payment is running...");
+
   const toastId = toast.loading("Verifying Payment...")
   dispatch(setPaymentLoading(true))
   try {

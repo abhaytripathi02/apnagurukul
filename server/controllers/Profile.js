@@ -246,7 +246,9 @@ exports.getEnrolledCourses = async (req, res) => {
             path: "subSection",
           },
         },
-      }).exec()
+      }).exec();
+
+      console.log("User-Details in Profile Controller line No-251: ", userDetails )
 
     userDetails = userDetails.toObject();
 

@@ -28,7 +28,7 @@ import CourseDetails from './pages/CourseDetails'
 
 import { useSelector} from 'react-redux';
 import Catalog from './pages/Catalog';
-import { useEffect } from 'react';
+
 
 // import { setUser } from './slices/profileSlice';
 
