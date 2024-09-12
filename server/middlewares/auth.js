@@ -21,12 +21,10 @@ exports.auth = async (req, res, next) => {
     // Verify the token - using secret key
     // Extract info from token(decode)
     try {
-      console.log("Checking token");
+  
       const decode = jwt.verify(token, process.env.JWT_SECRET);
       console.log("Decoded Token :", decode);
 
-      // req.user = await User.findById(decode.id);
-      //token ---> 
       req.user = decode;
 
     } catch (error) {

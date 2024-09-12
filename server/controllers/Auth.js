@@ -1,11 +1,14 @@
 const User = require("../models/User");
 const OTP = require("../models/otp");
 const Profile = require("../models/Profile");
+
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 const { passwordUpdated } = require("../mail/templates/passwordUpdate");
 const mailSender = require("../utils/mailSender");
+
 require("dotenv").config();
 
 //<-----sendOTP Handler---->
@@ -32,7 +35,6 @@ exports.sendOTP = async (req, res) => {
       lowerCaseAlphabets: false,
       specialChars: false
     });
-    console.log(`Generated OTP is: ${otpValue}`);
    
 
     //check unique otp exist or not in db   ->> Why Problem ?
@@ -48,7 +50,7 @@ exports.sendOTP = async (req, res) => {
       });
       result = await OTP.findOne({ otp: otpValue });
     }
-    console.log("Error identifed in SEND OTP Controller-2")
+    console.log("Error identifed in SEND OTP Controller-2");
 
     //newOtp object is created using OTP model --> save the OTP to database with expiry of 5 minutes from now
     // const newOtp = new OTP({
@@ -124,13 +126,14 @@ exports.signUp = async (req, res) => {
         message: "Both Password must be same. try again!"
       });
     }
+
     // console.log("<------- Sign Up after OTP ---->")
     //check if user already exist or not
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "User already exists. Please sign in to continue."
+        message: "User already exists. Please Sign In to continue."
       });
     }
 
@@ -140,7 +143,6 @@ exports.signUp = async (req, res) => {
     const recentOtp = await OTP.findOne({ email: email })
       .sort({ createdAt: -1 })
       .limit(1);
-    console.log("Recent OTP- ", recentOtp);
 
     //Validate OTP ------->
     if (recentOtp == null) {

@@ -58,9 +58,11 @@ exports.capturePayment = async(req, res) =>{
     // create order 
     try {
      
+      
       const paymentResponse = await instance.orders.create(options);
       
       console.log("Debugger at payment controller line-63: ", paymentResponse);
+      
 
       res.json({
         success:true,

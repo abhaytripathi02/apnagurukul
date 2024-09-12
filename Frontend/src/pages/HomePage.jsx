@@ -60,7 +60,7 @@ export const HomePage = () => {
             </div>
     
             {/* Video section  */}
-            <div className='w-[40%] my-12 mx-3 shadow-md shadow-blue-200 '>
+            <div className='w-[40%] my-12 mx-3 shadow-md shadow-blue-200 hidden sm:flex '>
                 <video muted autoPlay loop>
                   <source src={Banner} type="video/mp4"/>
                   </video>
