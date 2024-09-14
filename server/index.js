@@ -1,6 +1,8 @@
 // Importing necessary modules and packages
 const express = require("express");
 const app = express();
+const passport = require("passport");
+const session = require('express-session')
 
 //import routes
 const userRoutes = require("./routes/userAuth");
@@ -11,6 +13,10 @@ const contactUsRoute = require("./routes/Contact");
 
 //import database connection
 const database = require("./config/database");
+const googleAuth = require("./config/googleAuth");
+
+// googleAuth();
+
 //Initialize middleware
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -53,13 +59,64 @@ app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/reach", contactUsRoute);
 
+
+const path = require('path');
+
 // Testing the server
 app.get("/", (req, res) => {
-  return res.json({
-    success: true,
-    message: "Your server is up and running ..."
-  });
+
+  res.sendFile(path.join(__dirname, 'index.html'));
+  
+  // return res.json({
+  //   success: true,
+  //   message: "Your server is up and running ..."
+  // });
 });
+
+function isLoggedIn(req, res, next) {
+  req.user ? next() : res.sendStatus(401);
+}
+
+app.use(session({
+  secret: 'mysecret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+app.get('/auth/google',
+  passport.authenticate('google', { scope: [ 'email', 'profile' ] }
+));
+
+app.get( '/auth/google/callback',
+    passport.authenticate( 'google', {
+        successRedirect: '/auth/protected',
+        failureRedirect: '/auth/google/failure'
+})
+);
+
+app.get('/auth/protected', isLoggedIn, (req, res)=>{
+  let name = req.user.displayName;
+  let email = req.user.email;
+
+  res.send(`hello ${name} and email is ${email}`);
+});
+
+app.get('/auth/google/failure', (req, res)=>{
+  res.send('Something went wrong!');
+});
+
+app.use('/auth/logout', (req, res)=>{
+     req.session.destroy();
+     res.send('see you soon');
+});
+
+
+
 
 // Listening to the server
 app.listen(PORT, () => {

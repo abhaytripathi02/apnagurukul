@@ -49,6 +49,16 @@ exports.capturePayment = async(req, res) =>{
       }
     }
 
+   
+    const MAXIMUM_ALLOWED_AMOUNT = 1000000;
+
+    if ((totalAmount * 100) >= MAXIMUM_ALLOWED_AMOUNT) {
+      return res.status(400).json({
+        success: false,
+        message: `Total amount (${totalAmount}) exceeds the maximum allowed amount.`
+      });
+    }
+    
 
     const options = {
       amount: totalAmount * 100, // amount is in paise
@@ -58,7 +68,8 @@ exports.capturePayment = async(req, res) =>{
     // create order 
     try {
      
-      
+     
+
       const paymentResponse = await instance.orders.create(options);
       
       console.log("Debugger at payment controller line-63: ", paymentResponse);
@@ -70,11 +81,11 @@ exports.capturePayment = async(req, res) =>{
       });
 
     } catch (error) {
-       console.log(error);
+       console.log("Error in payment capture section: ",error);
        res.status(500).json({
         success:false,
-        message:"Could Not Initiate Order:",
-        Problem: error.message
+        message:"Could Not Initiate Order",
+        error: error.description
        })
     }
 }
@@ -92,7 +103,7 @@ exports.verifyPayment = async(req, res) => {
   const userId = req.user.id;
   const email = req.user.email;
 
-  console.log("Courses: ", courses);
+
   
   // validation
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courses || !userId) {

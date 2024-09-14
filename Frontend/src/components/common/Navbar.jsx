@@ -203,7 +203,7 @@ const Navbar = () => {
        
        {/* Hamburger toggle buttuon  */}
        <div className='md:hidden'>
-             <button onClick={toggleNavbar}> {isOpen ? <X/> : <Menu fill='red'/>} </button> 
+             <button onClick={toggleNavbar}> {isOpen ? <X className='text-white'/> : <Menu className='text-white'/>} </button> 
        </div>
 
        {

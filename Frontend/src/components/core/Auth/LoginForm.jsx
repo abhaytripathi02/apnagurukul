@@ -33,7 +33,20 @@ function LoginForm() {
      
   }
 
+  const logInWithGoogle = async() =>{
+    console.log("Google Auth");
+    try {
+      const response = await fetch('http://localhost:4000/auth/google');
+      console.log("response: ", response);
+    } catch (error) {
+      console.log("Error in google auth: ", error);
+    }
+ 
+  }
+
   return (
+
+    <>
     <form
       onSubmit={handleOnSubmit}
       className="mt-6 flex w-full flex-col gap-y-4"
@@ -81,13 +94,21 @@ function LoginForm() {
           </p>
         </Link>
       </label>
-      <button
-        type="submit"
-        className="mt-6 rounded-[8px] bg-yellow-50 py-[8px] px-[12px] font-medium text-richblack-900"
-      >
+      <button type="submit"
+        className="mt-6 rounded-[8px] bg-yellow-50 py-[8px] px-[12px] font-medium text-richblack-900">
         Log In
       </button>
+          <p className="text-white font-bold text-center">or</p>
+        
       </form>
+
+       <div className="w-full flex justify-center">
+          <button onClick={logInWithGoogle} className="mt-6 rounded-[8px] bg-[#4c6cec] py-[8px] px-[12px] font-medium text-richblack-900">
+            Log In with Google
+          </button>
+       </div>
+
+    </>
   )
 }
 
