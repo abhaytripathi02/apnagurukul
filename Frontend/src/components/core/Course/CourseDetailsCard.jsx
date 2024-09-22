@@ -20,7 +20,8 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
   const { user } = useSelector((state) => state.profile)
   const { token } = useSelector((state) => state.auth)
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  
 
   const {
     thumbnail: ThumbnailImage,

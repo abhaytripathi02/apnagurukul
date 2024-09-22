@@ -1,6 +1,6 @@
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
-
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 //pages
 import HomePage from "./pages/HomePage";
 import Dashboard from './pages/Dashboard';
@@ -26,28 +26,77 @@ import MyCourses from './components/core/Dashboard/MyCourses'
 import CourseDetails from './pages/CourseDetails'
 
 
-import { useSelector} from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
 import Catalog from './pages/Catalog';
+import toast from 'react-hot-toast';
+import { setToken } from './slices/authSlice';
+import { setUser } from './slices/profileSlice';
+import { setCourse } from './slices/courseSlice';
 
 
-// import { setUser } from './slices/profileSlice';
+
+
 
 
 
 function App() {
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.profile.user);
-  // const user = JSON.parse(localStorage.getItem('user'));
+  const token = JSON.parse(localStorage.getItem('token'));
 
-  // Fetch user from localStorage and update Redux state
-  // useEffect(() => {
-  //   if (localStorage.getItem("token")) {
-  //     const token = JSON.parse(localStorage.getItem("token"))
-  //     dispatch(getUserDetails(token, navigate))
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+        
+
+    (async () => {
+      try {
+     
+        const response = await fetch('http://localhost:4000/api/v1/auth/verify-token', {
+          method: 'POST', 
+          headers: {
+            'Content-Type': 'application/json', // Indicate the type of content you're sending
+            'Authorization': `Bearer ${token}` // Replace 'yourToken' with the actual token
+          },
+          body: JSON.stringify({ token: token }) // JSON.stringify()- This converts the JavaScript object obj into a JSON string.
+        });
+        
+        // JSON.parse() method converts the JSON string into a JavaScript object.
+         
+
+        // Parse the JSON response - convert json object into javaScript object
+        const data = await response.json();
+
+        // Log or handle the successful response
+        console.log('Token verification successful:', data);
+       
+  
+        if(data.success == false) {
+          toast.error('Token verification failed'); 
+
+          localStorage.removeItem("token")
+          localStorage.removeItem("user")
+          localStorage.removeItem("course")
+
+          dispatch(setToken(null))
+          dispatch(setUser(null))
+          dispatch(setCourse(null))
+
+          navigate('/login');
+        }
+  
+      } catch (error) {
+  
+        // Handle errors such as network issues or bad responses
+        console.error('Token verification failed:', error.message);
+        toast.error('Unexpected Error while validating token');   
+      }
+    })();
+
+  }, []);
+
+
 
 
 

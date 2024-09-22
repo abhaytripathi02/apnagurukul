@@ -55,7 +55,7 @@ exports.passwordUpdated = (email, name) => {
     
     <body>
         <div class="container">
-            <a href="https://apnaGurukul-edtech-project.vercel.app"><img class="logo"
+            <a href="https://apnagurukul-ui.vercel.app/"><img class="logo"
                     src="https://res.cloudinary.com/dqv3zwory/image/upload/v1711099745/FileUploadProject/gsrf90ay4geeiakql3t7.png" alt="ApnaGurukul"></a>
             <div class="message">Password Update Confirmation</div>
             <div class="body">

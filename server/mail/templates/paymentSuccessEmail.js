@@ -1,3 +1,4 @@
+
 exports.paymentSuccessEmail = (name, amount, orderId, paymentId) => {
   return `<!DOCTYPE html>
     <html>
@@ -67,8 +68,7 @@ exports.paymentSuccessEmail = (name, amount, orderId, paymentId) => {
     
     <body>
         <div class="container">
-            <a href="https://studynotion-edtech-project.vercel.app"><img class="logo" src="https://i.ibb.co/7Xyj3PC/logo.png"
-                    alt="StudyNotion Logo"></a>
+            <img class="logo" src="https://res.cloudinary.com/dqv3zwory/image/upload/v1711099745/FileUploadProject/gsrf90ay4geeiakql3t7.png" alt="ApnaGurukul Logo">
             <div class="message">Course Payment Confirmation</div>
             <div class="body">
                 <p>Dear ${name},</p>

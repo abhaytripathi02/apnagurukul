@@ -13,14 +13,14 @@ import {
 } from "../slices/viewCourseSlice"
 
 export default function ViewCourse() {
-  const { courseId } = useParams()
-  const { token } = useSelector((state) => state.auth)
-  const dispatch = useDispatch()
-  const [reviewModal, setReviewModal] = useState(false)
+  const { courseId } = useParams();
+  const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [reviewModal, setReviewModal] = useState(false);
 
   useEffect(() => {
-    ;(async () => {
-      const courseData = await getFullDetailsOfCourse(courseId, token)
+    (async () => {
+      const courseData = await getFullDetailsOfCourse(courseId, token);
       // console.log("Course Data here... ", courseData.courseDetails)
       dispatch(setCourseSectionData(courseData.courseDetails.courseContent))
       dispatch(setEntireCourseData(courseData.courseDetails))

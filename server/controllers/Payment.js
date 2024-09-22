@@ -187,10 +187,12 @@ const enrollStudent = async(courses, userId, email, res) => {
                 }
                 
               const enrolledCoursesName = courseNamedata.map(course => course).join(', '); 
-              console.log("CourseName: ", enrolledCoursesName);
+             
+              const userDetails = await User.findById(userId);
+
               try {
                 // send mail to student 
-                const emailResonse = await mailSender(email, `Successfully Enrolled into ${enrolledCoursesName}`);               
+                await mailSender( userDetails.email, courseEnrollmentEmail( enrolledCoursesName, userDetails.firstName));               
               } catch (error) {
                 console.log("Error while sending Email: ", error);
                 console.error(error.message);
