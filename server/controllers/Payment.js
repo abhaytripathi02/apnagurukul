@@ -176,8 +176,6 @@ const enrollStudent = async(courses, userId, email, res) => {
                             { new: true } // returns the updated document
                           );
                           
-                       
-
                           if(!enrolledUser){
                             return res.status(500).json({success:false, message: "User not found"});
                           }

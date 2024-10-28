@@ -92,11 +92,11 @@ app.get('/auth/google',
   passport.authenticate('google', { scope: [ 'email', 'profile' ] }
 ));
 
-app.get( '/auth/google/callback',
-    passport.authenticate( 'google', {
-        successRedirect: '/auth/protected',
-        failureRedirect: '/auth/google/failure'
-})
+app.get('/auth/google/callback', 
+  passport.authenticate('google', {
+    successRedirect: '/auth/protected',
+    failureRedirect: '/auth/google/failure'
+  })
 );
 
 app.get('/auth/protected', isLoggedIn, (req, res)=>{

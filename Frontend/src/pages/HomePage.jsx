@@ -15,12 +15,23 @@ import ExploreMore from '../components/core/HomePage/ExploreMore'
 
 import Education from './Education.json' // lottie-file downloaded json file 
 import Lottie from 'lottie-react'
+import ReviewSlider from '../components/common/ReviewSlider'
+//animation component
+import { Spotlight } from '../components/ui/Spotlight'
+import Testimonials from '../components/core/HomePage/Testimonials'
+import MainSection from '../components/core/HomePage/ScrollEffect'
+import TimelineEffect from '../components/core/HomePage/Timeline-Effect'
+import MeetOurEducators from '../components/core/HomePage/MeetOurEducators'
 
 export const HomePage = () => {
 
   
   return (
-    <div>
+    <div className='bg-black'>
+        
+      {/* Spotlight Animation   */}
+      <Spotlight className="-top-40 left-0 md:left-60 md:-top-20"  fill="white"/>
+
         {/* Section-1  */}
         <section className='relative mx-auto flex flex-col w-11/12 items-center
           text-white justify-between mt-10 '>
@@ -59,12 +70,12 @@ export const HomePage = () => {
                 <Lottie animationData={Education}/>
             </div>
     
-            {/* Video section  */}
+            {/* Video section 
             <div className='w-[40%] my-12 mx-3 shadow-md shadow-blue-200 hidden sm:flex '>
                 <video muted autoPlay loop>
                   <source src={Banner} type="video/mp4"/>
                   </video>
-            </div>
+            </div> */}
           </div>
         
 
@@ -132,12 +143,13 @@ export const HomePage = () => {
            />
            </div>
 
-          <ExploreMore/>
+          {/* <ExploreMore/> */}
         </section>
 
+        <section >
+         <TimelineEffect/>
+        </section>
       
-      
-     
         {/* Section-2  */}
         <section className='bg-pure-greys-5 text-richblack-700 mt-8
         '>
@@ -191,14 +203,14 @@ export const HomePage = () => {
          
             <InstructorSection/>
             
-            {/* review subsection here  */}
-            <h1 className='text-4xl font-semibold text-center mt-10'>Reviews from other learners</h1>
-             
-            {/* Review Slider here  */}
-            
-          
+      
+
+            {/* <ReviewSlider/> */}
+            <Testimonials/>
+    
          </section>
-       
+          
+        <MeetOurEducators/>
 
         {/* footer  */}
         <Footer/>

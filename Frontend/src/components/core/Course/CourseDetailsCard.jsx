@@ -40,7 +40,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
       return
     }
     if (token) {
-      dispatch(addToCart(course))
+      dispatch(addToCart(course));
       return
     }
     setConfirmationModal({
@@ -53,7 +53,6 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
     })
   }
 
-  // console.log("Student already enrolled ", course?.studentsEnroled, user?._id)
 
   return (
     <>

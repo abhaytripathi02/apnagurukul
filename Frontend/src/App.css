@@ -3,9 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
 html,body{
     overflow-x: hidden;
 }
+
+
 
 .codeblock1 {
     width: 372.95px;

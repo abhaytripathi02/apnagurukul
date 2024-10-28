@@ -44,8 +44,8 @@ export const sidebarLinks = [
   },
   {
     id: 7,
-    name: "Wishlist",
-    path: "/dashboard/my-wishlist",
+    name: "Task Manager",
+    path: "/dashboard/my-task",
     type: ACCOUNT_TYPE.STUDENT,
     icon: "VscVm",
   },

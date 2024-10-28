@@ -32,6 +32,8 @@ import toast from 'react-hot-toast';
 import { setToken } from './slices/authSlice';
 import { setUser } from './slices/profileSlice';
 import { setCourse } from './slices/courseSlice';
+import ViewCourse from './pages/ViewCourse';
+import VideoDetails from './components/core/ViewCourse/VideoDetails';
 
 
 
@@ -49,7 +51,6 @@ function App() {
 
   useEffect(()=>{
         
-
     (async () => {
       try {
      
@@ -83,7 +84,7 @@ function App() {
           dispatch(setUser(null))
           dispatch(setCourse(null))
 
-          navigate('/login');
+          navigate('/');
         }
   
       } catch (error) {
@@ -101,7 +102,7 @@ function App() {
 
 
   return (
-    <div className='w-screen min-h-screen bg-richblack-900 flex flex-col font-inter '>
+    <div className='w-screen min-h-screen bg-richblack-800 flex flex-col font-inter '>
       <Navbar/>
         <Routes>
           <Route path='/' element={<HomePage/>} />
@@ -166,15 +167,24 @@ function App() {
 
           </Route>
 
+         <Route element={
+              <PrivateRoute>
+                <ViewCourse/>
+              </PrivateRoute>
+         }>
 
+         {
+          user?.accountType === 'Student' && (
+            <>
+                <Route
+                  path='view-course/:courseId/section/:sectionId/sub-section/:subSectionId'
+                  element={<VideoDetails/>} />
+            </>
+          )
+         }
+          
 
-          {/* Route for all users -students/instructor/admin */}
-
-          {/* Routes for Students only  */}
-
-       
-
-          {/* Routes for Admin only   */}
+         </Route>
 
 
         </Routes>

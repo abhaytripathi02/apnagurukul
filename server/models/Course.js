@@ -54,8 +54,7 @@ const CourseSchema = new mongoose.Schema({
       ref: "User",
       required: true
     }],
-
-    // How to implement this ? Write business logic for different state of Courses 
+    
   status: {
     type: String,
     enum: ["Draft","Pending","Published"],
@@ -65,6 +64,7 @@ const CourseSchema = new mongoose.Schema({
     type: Date,
     default: Date.now 
   },
+
   courseRequirements: [{
     type: String
   }]

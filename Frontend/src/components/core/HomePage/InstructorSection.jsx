@@ -1,5 +1,5 @@
 import React from 'react'
-import instructor from '../../../assets/Images/Instructor.png'
+import instructor from '../../../assets/Images/woman-teaching-classroom.jpg'
 import HighlightText from './HighlightText'
 import CTAButton from './Button'
 import {FaArrowRight} from 'react-icons/fa'
@@ -9,7 +9,7 @@ const InstructorSection = () => {
     <div className='flex flex-row gap-20 items-center'>
 
     <div className='w-[45%]'>
-        <img src={instructor} alt="instructorImage" className='object-fill' />
+        <img src={instructor} alt="instructorImage" className='object-fill h-[600px]' />
     </div>
 
     <div className=' w-[50%] flex flex-col items-start gap-8'>

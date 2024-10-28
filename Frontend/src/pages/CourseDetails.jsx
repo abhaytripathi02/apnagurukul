@@ -27,15 +27,15 @@ function CourseDetails() {
 
   // Getting courseId from url parameter
   const { courseId } = useParams()
-  // console.log(`course id: ${courseId}`)
 
-  // Declear a state to save the course details
+
+  // declare a state to save the course details
   const [response, setResponse] = useState(null)
   const [confirmationModal, setConfirmationModal] = useState(null);
 
   useEffect(() => {
     // Calling fetchCourseDetails fucntion to fetch the details
-    ;(async () => {
+    (async () => {
       try {
         console.log("CourseID: ", courseId)
         const res = await fetchCourseDetails(courseId)
@@ -47,10 +47,10 @@ function CourseDetails() {
     })()
   }, [courseId])
 
-  // console.log("response: ", response)
+
 
   // Calculating Avg Review count
-  const [avgReviewCount, setAvgReviewCount] = useState(0)
+  const [avgReviewCount, setAvgReviewCount] = useState(0);
   // useEffect(() => {
   //   const count = GetAvgRating(response?.data?.courseDetails.ratingAndReviews)
   //   setAvgReviewCount(count)
@@ -59,9 +59,10 @@ function CourseDetails() {
 
   // // Collapse all
   // const [collapse, setCollapse] = useState("")
+
   const [isActive, setIsActive] = useState(Array(0))
   const handleActive = (id) => {
-    // console.log("called", id)
+
     setIsActive(
       !isActive.includes(id)
         ? isActive.concat([id])
@@ -77,8 +78,8 @@ function CourseDetails() {
     response?.data?.courseDetails?.courseContent?.forEach((sec) => {
       lectures += sec.subSection.length || 0
     })
-    setTotalNoOfLectures(lectures)
-  }, [response])
+    setTotalNoOfLectures(lectures);
+  }, [response]);
 
   if (loading || !response) {
     return (
@@ -106,7 +107,8 @@ function CourseDetails() {
   } = response.data;
 
   console.log("CourseDetail:-> ",response.data);
-
+  
+  // BuyCourse Handler
   const handleBuyCourse = () => {
     if (token) {
       BuyCourse(token, [courseId], user, navigate, dispatch)
@@ -135,6 +137,7 @@ function CourseDetails() {
   return (
     <>
       <div className={`relative w-full bg-richblack-800`}>
+      
         {/* Hero Section */}
         <div className="mx-auto box-content px-4 lg:w-[1260px] 2xl:relative ">
           <div className="mx-auto grid min-h-[450px] max-w-maxContentTab justify-items-center py-8 lg:mx-0 lg:justify-items-start lg:py-0 xl:max-w-[810px]">
@@ -226,7 +229,7 @@ function CourseDetails() {
                     className="text-yellow-25"
                     onClick={() => setIsActive([])}
                   >
-                    Collapse all sections
+                    {/* Collapse all sections */}
                   </button>
                 </div>
               </div>
@@ -257,11 +260,12 @@ function CourseDetails() {
                   alt="Author"
                   className="h-14 w-14 rounded-full object-cover"
                 />
+
                 <p className="text-lg">{`${instructor.firstName} ${instructor.lastName}`}</p>
               </div>
-              <p className="text-richblack-50">
-                {instructor?.additionalDetails?.about}
-              </p>
+                <p className="text-richblack-50">
+                  {instructor?.additionalDetails?.about}
+                </p>
             </div>
           </div>
         </div>

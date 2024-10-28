@@ -27,26 +27,26 @@ function ReviewSlider() {
   const [reviews, setReviews] = useState([])
   const truncateWords = 15
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //     const { data } = await apiConnector(
-  //       "GET",
-  //       ratingsEndpoints.REVIEWS_DETAILS_API
-  //     )
-  //     if (data?.success) {
-  //       setReviews(data?.data)
-  //     }
-  //   })()
-  // }, [])
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await apiConnector(
+        "GET",
+        ratingsEndpoints.REVIEWS_DETAILS_API
+      )
+      if (data?.success) {
+        setReviews(data?.data)
+      }
+    })()
+  }, [])
 
-  // console.log(reviews)
+  console.log(reviews)
 
   return (
     <div className="text-white">
       <div className="my-[50px] h-[184px] max-w-maxContentTab lg:max-w-maxContent">
         <Swiper
-          slidesPerView={4}
-          spaceBetween={25}
+          spaceBetween={20}
+          slidesPerView={4}  // Default to 1 slide for small screens
           loop={true}
           freeMode={true}
           autoplay={{
@@ -54,12 +54,23 @@ function ReviewSlider() {
             disableOnInteraction: false,
           }}
           modules={[FreeMode, Pagination, Autoplay]}
-          className="w-full "
+          className="w-full"
+          breakpoints={{
+            640: {
+              slidesPerView: 2,  // 2 slides for screens > 640px
+            },
+            768: {
+              slidesPerView: 3,  // 3 slides for screens > 768px
+            },
+            1024: {
+              slidesPerView: 4,  // 4 slides for larger screens
+            },
+          }}
         >
           {reviews.map((review, i) => {
             return (
               <SwiperSlide key={i}>
-                <div className="flex flex-col gap-3 bg-richblack-800 p-3 text-[14px] text-richblack-25">
+                <div className="flex flex-col gap-3 bg-richblack-800 p-3 text-[14px] text-richblack-25 w-[300px]">
                   <div className="flex items-center gap-4">
                     <img
                       src={
@@ -67,7 +78,7 @@ function ReviewSlider() {
                           ? review?.user?.image
                           : `https://api.dicebear.com/5.x/initials/svg?seed=${review?.user?.firstName} ${review?.user?.lastName}`
                       }
-                      alt=""
+                      alt="user image"
                       className="h-9 w-9 rounded-full object-cover"
                     />
                     <div className="flex flex-col">
