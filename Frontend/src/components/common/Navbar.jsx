@@ -81,7 +81,7 @@ const Navbar = () => {
 
       
         <div className='text-center'>
-          <p className='font-bold text-white text-lg'> APNA  <span className='bg-gradient-to-r text-transparent bg-clip-text from-[#4489F6] to-[#f87aec]'> GURUKUL </span> </p>
+          <p className='font-bold text-white text-sm md:text-base lg:text-lg'> APNA  <span className='bg-gradient-to-r text-transparent bg-clip-text from-[#4489F6] to-[#f87aec]'> GURUKUL </span> </p>
         </div> 
         
          {/* Search bar  */}
@@ -223,81 +223,91 @@ const Navbar = () => {
        </div>
 
        {
-        isOpen &&(
-          <div className='flex flex-col items-center basis-full'>
+  isOpen && (
+    <div 
+      className="
+        absolute top-full left-0 w-full 
+        bg-richblack-900 p-6 space-y-6 
+        z-50 shadow-lg min-h-screen
+      "
+    >
+      {/* Navbar */}
+      <nav className="w-full">
+        <ul className="flex flex-col items-center space-y-4 text-white">
+          <li className="w-full text-center" onClick={toggleNavbar} >
+            <NavLink to="/">
+              <p className={`${matchRoute('') ? 'text-yellow-25' : 'text-white'}`}>Home</p>
+            </NavLink>
+          </li>
+          <li className="w-full text-center" onClick={toggleNavbar} >
+            <NavLink to="/courses">
+              <p className={`${matchRoute('courses') ? 'text-yellow-25' : 'text-white'}`}>Courses</p>
+            </NavLink>
+          </li>
+          <li className="w-full text-center" onClick={toggleNavbar} >
+            <NavLink to="/about">
+              <p className={`${matchRoute('about') ? 'text-yellow-25' : 'text-white'}`}>About Us</p>
+            </NavLink>
+          </li>
+          <li className="w-full text-center" onClick={toggleNavbar} >
+            <NavLink to="/contact">
+              <p className={`${matchRoute('contact') ? 'text-yellow-25' : 'text-white'}`}>Contact</p>
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
 
-            {/* navbar  */}
-            <nav className='gap-10'>
-                  <ul className='flex flex-col items-center basis-full gap-x-6 text-richblack-25 '>
-                      <li> 
-                        <NavLink to= '/'>
-                        <p className={`${matchRoute('')? "text-yellow-25":"text-white"}`}>Home</p>
-                        </NavLink>
-                      </li>
+      <div className="flex justify-center gap-5">
+        {/* Student Dashboard Cart */}
+        {user &&
+          (user?.accountType !== 'Instructor' || user?.accountType !== 'Admin') && (
+            <Link to="/dashboard/cart" className="relative" onClick={toggleNavbar}>
+              <AiOutlineShoppingCart
+                width="20px"
+                height="20px"
+                className="text-white font-bold"
+              />
+              {totalItems > 0 && (
+                <span className="font-bold text-yellow-50 absolute top-[-8px] left-2">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
+          )}
 
-                      <li> 
-                        <NavLink to= '/courses'>
-                        <p className={`${matchRoute('courses')?"text-yellow-25":"text-white"}`}>Courses</p>
-                        </NavLink>
-                      </li>
-
-                      <li> 
-                        <NavLink to= '/about'>
-                          <p className={`${matchRoute('about')?"text-yellow-25":"text-white"}`}>About Us</p>
-                        </NavLink>
-                      </li>
-
-                      <li> 
-                        <NavLink to= '/contact'>
-                        <p className={`${matchRoute('contact')?"text-yellow-25":"text-white"}`}>Contact</p>
-                        </NavLink>
-                      </li>
-                  
-                  </ul>
-            </nav>
-           
-              <div className='flex gap-5 items-center'>
-
-                {/* student dashboard cart  */}
-                {
-                  user && (user?.accountType !== Instructor || user?.accountType !== Admin) 
-                  && (
-                    <Link to='/dashboard/cart' className='relative'>
-                        <AiOutlineShoppingCart width="20px" height="20px" className='text-white font-bold'/>
-                        {
-                          totalItems > 0 && (
-                            <span className=' font-bold text-yellow-50 absolute top-[-10px] left-1'>
-                              {totalItems}
-                            </span>
-                          )
-                        }
-                    </Link>
-                  )
-                }
-                
-                {/*  login & Signup button */}
-                {
-                  token === null && (
-                    <>
-                      <NavLink to= '/login'>
-                        <button type="button" className='bg-richblack-800 px-4 py-1.5 hover:scale-105 border border-richblack-700  rounded-md'>
-                          <p className={"text-white"}>Login</p>
-                        </button>
-                      </NavLink>   
-
-                      <NavLink to= '/signup'>
-                        <button type="button" className='bg-richblack-800 px-4 py-1.5 hover:scale-105 border border-richblack-700  rounded-md'>
-                          <p className={"text-white"}>Signup</p>
-                        </button>
-                      </NavLink>         
-                    </>
-                  )
-                }
-              </div>
-
-          </div>
-        )
-       }
+        {/* Login & Signup Buttons */}
+        {token === null && (
+          <>
+            <NavLink to="/login">
+              <button
+                type="button"
+                className="
+                  bg-richblack-800 px-4 py-1.5 border border-richblack-700 
+                  rounded-md text-white hover:scale-105 transition-transform
+                "
+                onClick={toggleNavbar}
+              >
+                Login
+              </button>
+            </NavLink>
+            <NavLink to="/signup">
+              <button
+                type="button"
+                className="
+                  bg-richblack-800 px-4 py-1.5 border border-richblack-700 
+                  rounded-md text-white hover:scale-105 transition-transform
+                "
+                onClick={toggleNavbar}
+              >
+                Signup
+              </button>
+            </NavLink>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
 
       </div>
 
