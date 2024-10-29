@@ -54,10 +54,10 @@ module.exports = {
       "edu-sa": ["Edu SA Beginner", "cursive"],
       mono: ["Roboto Mono", "monospace"],
     },
-
+    
     // screens: {
     //   '2xl': {'max': '1535px'},
-    //   // => @media (max-width: 1535px) { ... }
+    //  // => @media (max-width: 1535px) { ... }
 
     //   'xl': {'max': '1279px'},
     //   // => @media (max-width: 1279px) { ... }

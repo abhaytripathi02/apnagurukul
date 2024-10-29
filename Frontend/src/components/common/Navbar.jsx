@@ -77,7 +77,7 @@ const Navbar = () => {
 
   return (
     <div className='flex items-center justify-center h-14 border-b-2 border-b-yellow-100 fixed z-50 w-screen bg-[rgb(28,42,64)]'>
-      <div className='flex w-11/12 max-w-maxContent items-center justify-between'>
+      <div className='flex w-11/12 max-w-maxContent  gap-2 items-center justify-between'>
 
       
         <div className='text-center'>
@@ -86,7 +86,7 @@ const Navbar = () => {
         
          {/* Search bar  */}
           <div>
-              <form class="max-w-md mx-auto">   
+              <form class="max-w-md mx-auto w-[10rem] sm:w-auto">   
                   <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                   <div class="relative ">
                       <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -99,7 +99,6 @@ const Navbar = () => {
                       <button type="submit" class=" flex justify-center items-center text-white absolute max-h-6 end-2.5 bottom-1.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
                   </div>
               </form>
-
           </div>
 
             {/* navbar  */}
