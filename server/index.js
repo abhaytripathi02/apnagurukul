@@ -3,7 +3,10 @@ const express = require("express");
 const app = express();
 const passport = require("passport");
 const session = require('express-session')
-
+// Security related library 
+const Helmet  = require('helmet');
+const rateLimit = require('express-rate-limit')
+ 
 //import routes
 const userRoutes = require("./routes/userAuth");
 const profileRoutes = require("./routes/profile");
@@ -13,9 +16,7 @@ const contactUsRoute = require("./routes/Contact");
 
 //import database connection
 const database = require("./config/database");
-const googleAuth = require("./config/googleAuth");
 
-// googleAuth();
 
 //Initialize middleware
 const cookieParser = require("cookie-parser");
@@ -32,6 +33,18 @@ dotenv.config();
 
 // Connecting to database
 database.dbconnect();
+
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 30,
+  message: 'Maximun limit of request is exceeds, Please try after 5 min',
+  statusCode: 429,
+  legacyHeaders: false,
+});
+
+app.use('/api', limiter);
+app.disable('x-powered-by');
+app.use(Helmet());
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
