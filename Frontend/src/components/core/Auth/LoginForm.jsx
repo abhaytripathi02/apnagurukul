@@ -98,8 +98,9 @@ function LoginForm() {
         className="mt-6 rounded-[8px] bg-yellow-50 py-[8px] px-[12px] font-medium text-richblack-900">
         Log In
       </button>
+      
           <p className="text-white font-bold text-center">or</p>
-        
+  
       </form>
 
        <div className="w-full flex justify-center">
