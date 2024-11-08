@@ -34,6 +34,7 @@ import { setUser } from './slices/profileSlice';
 import { setCourse } from './slices/courseSlice';
 import ViewCourse from './pages/ViewCourse';
 import VideoDetails from './components/core/ViewCourse/VideoDetails';
+import InstructorDashboard from './components/core/Dashboard/InstructorDashboard';
 
 
 
@@ -132,18 +133,11 @@ function App() {
           <Route path='/verify-email' element={<VerifyEmail/>}/>                
 
           {/* Private Route - for Only Logged in User */}
-           <Route 
-                  element={
-                      <PrivateRoute>
-                        <Dashboard/>
-                      </PrivateRoute>
-          } 
-            >
+           <Route   element={ <PrivateRoute> <Dashboard/> </PrivateRoute> } >
 
-            {/* Why exact ? */}
 
-           <Route path='/dashboard/my-profile'  element={ <MyProfile/>} />
-           <Route path='/dashboard/settings' exact element={<Settings/>} />
+            <Route path='/dashboard/my-profile'  element={ <MyProfile/>} />
+            <Route path='/dashboard/settings' exact element={<Settings/>} />
 
            {
             user?.accountType === 'Student' && ( 
@@ -158,8 +152,9 @@ function App() {
            {
             user?.accountType === 'Instructor' && ( 
               <>
-              <Route path='/dashboard/add-course' element={<AddCourse/>} />
+               <Route path='/dashboard/add-course' element={<AddCourse/>} />
                <Route path='/dashboard/my-courses' element={<MyCourses/>} />
+               <Route path='/dashboard/instructorDashboard' element={<InstructorDashboard/>} />
                 
               </>
             )

@@ -16,8 +16,6 @@ export default function Sidebar() {
   // Not Working - I think setUser() is not working properly in profileSlice
   const { user} = useSelector((state) => state.profile); 
 
-  console.log("User in Sidebar: ", user);
-
 
 
   const dispatch = useDispatch();

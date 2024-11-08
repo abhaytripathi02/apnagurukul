@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import ReactStars from "react-rating-stars-component"
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
+import toast from "toast"
 
 // Import required modules
 import { Pagination, Autoplay, FreeMode } from 'swiper/modules';
@@ -22,24 +23,32 @@ import { FaStar } from "react-icons/fa"
 // Get apiFunction and the endpoint
 import { apiConnector } from "../../services/apiConnector"
 import { ratingsEndpoints } from "../../services/api"
+import toast from 'react-hot-toast';
 
 function ReviewSlider() {
   const [reviews, setReviews] = useState([])
-  const truncateWords = 15
+  const truncateWords = 15;
+
+  const reviewDetails = async() =>{
+      try {
+
+        const { data } = await apiConnector("GET", ratingsEndpoints.REVIEWS_DETAILS_API);
+
+        if (data?.success) {
+          setReviews(data?.data)
+        }
+        
+      } catch (error) {
+        console.log("Error in ReviewSlider: ", error);
+        toast.error(error);
+      }
+  }
 
   useEffect(() => {
-    ;(async () => {
-      const { data } = await apiConnector(
-        "GET",
-        ratingsEndpoints.REVIEWS_DETAILS_API
-      )
-      if (data?.success) {
-        setReviews(data?.data)
-      }
-    })()
+    reviewDetails();
   }, [])
 
-  console.log(reviews)
+  console.log("Reviews: ",reviews);
 
   return (
     <div className="text-white">

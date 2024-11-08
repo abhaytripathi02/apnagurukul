@@ -301,13 +301,18 @@ exports.getEnrolledCourses = async (req, res) => {
   }
 }
 
+
+
 exports.instructorDashboard = async (req, res) => {
+
   try {
     const courseDetails = await Course.find({ instructor: req.user.id })
 
     const courseData = courseDetails.map((course) => {
-      const totalStudentsEnrolled = course.studentsEnrolled.length
-      const totalAmountGenerated = totalStudentsEnrolled * course.price
+
+      const totalStudentsEnrolled = course.studentsEnrolled.length;
+
+      const totalAmountGenerated = totalStudentsEnrolled * course.price;
 
       // Create a new object with the additional fields
       const courseDataWithStats = {
@@ -319,12 +324,14 @@ exports.instructorDashboard = async (req, res) => {
         totalAmountGenerated,
       }
 
-      return courseDataWithStats
+      return courseDataWithStats;
+
     })
 
-    res.status(200).json({ courses: courseData })
+    res.status(200).json({ courses: courseData });
+
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(500).json({ message: "Server Error" })
   }
 }

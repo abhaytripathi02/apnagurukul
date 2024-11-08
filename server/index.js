@@ -2,10 +2,13 @@
 const express = require("express");
 const app = express();
 const passport = require("passport");
-const session = require('express-session')
+const session = require('express-session');
+const xss = require('xss-clean');
+
 // Security related library 
 const Helmet  = require('helmet');
-const rateLimit = require('express-rate-limit')
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
  
 //import routes
 const userRoutes = require("./routes/userAuth");
@@ -42,19 +45,28 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use('/api', limiter);
-app.disable('x-powered-by');
-app.use(Helmet());
 
+// middleware 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
+
+//security related middleware
+app.use('/api', limiter);
+app.disable('x-powered-by');
+app.use(Helmet());
+// against mongo query selector injection attacks:
+app.use(mongoSanitize());
+app.use(xss());
+
+
 app.use(
   cors({
     origin: "*", 
     credentials: true,
   })
 );
+
 app.use(
   fileUpload({
     useTempFiles: true

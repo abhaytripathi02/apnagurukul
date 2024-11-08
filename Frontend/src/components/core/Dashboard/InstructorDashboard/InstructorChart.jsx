@@ -2,11 +2,12 @@ import { useState } from "react"
 import { Chart, registerables } from "chart.js"
 import { Pie } from "react-chartjs-2"
 
-Chart.register(...registerables)
+Chart.register(...registerables);
 
 export default function InstructorChart({ courses }) {
+
   // State to keep track of the currently selected chart
-  const [currChart, setCurrChart] = useState("students")
+  const [currChart, setCurrChart] = useState("students");
 
   // Function to generate random colors for the chart
   const generateRandomColors = (numColors) => {
@@ -44,11 +45,20 @@ export default function InstructorChart({ courses }) {
 
   // Options for the chart
   const options = {
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'right'
+      },
+      tooltip: {
+        enabled: true
+      }
+    }
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-y-4 rounded-md bg-richblack-800 p-6">
+    <div className="flex flex-1 flex-col gap-y-4 rounded-md bg-richblack-700 p-6">
       <p className="text-lg font-bold text-richblack-5">Visualize</p>
       <div className="space-x-4 font-semibold">
         {/* Button to switch to the "students" chart */}
